@@ -48,6 +48,8 @@ console.log(answer);
         case answer.includes("greet") : greet(); 
         break; 
         case answer.includes("take"): take();
+        break;
+        case answer.includes("drop"): drop();
         break; 
         case answer.includes("check inventory"): checkInventory();
         break;
@@ -61,11 +63,18 @@ console.log(answer);
   process.exit();
 }
 
+//list of all the rooms and their qualities 
+rooms = {
 greatHall = {
   status: "unlocked", 
   roomDescription: "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?", 
   items: ["sorting hat", "treacle tart"], 
-  possibleDirections:["north", "south", "east"], 
+  possibleDirections:["north", "south", "east"],
+  north: gryffindorCommon,
+  west: false, 
+  south: ChamberOfSecrets, 
+}, 
+
 }
 
 function enter (room) {
@@ -73,9 +82,23 @@ function enter (room) {
   console.log(currentRoom.roomDescription)
 }
 
+let direction = "south" 
 function move () {
-  console.log("I'm moving!")
-}
+  switch (true) {
+    case answer.includes("south") : direction = "south"; 
+    break; 
+    case answer.includes("north") : direction = "north"; 
+    break; 
+    case answer.includes("east") : direction = "east" 
+    break; 
+    case answer.includes("west") : direction = "west" 
+    break; 
+    default start();
+  }
+
+  }
+
+
 
 
 //room object template: 
