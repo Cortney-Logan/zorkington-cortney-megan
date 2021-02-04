@@ -77,6 +77,9 @@ function move () {
   console.log("I'm moving!")
 }
 
+///adding in some comments for practice
+//with git hub
+//cant wait for this to work amazingly!
 
 //room object template: 
 /*roomName = {
