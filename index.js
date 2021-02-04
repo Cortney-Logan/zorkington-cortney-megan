@@ -76,7 +76,7 @@ function enter (room) {
 function move () {
   console.log("I'm moving!")
 }
-
+// comment/kavitha
 
 //room object template: 
 /*roomName = {
