@@ -78,6 +78,10 @@ function move () {
 }
 // comment/kavitha
 
+///adding in some comments for practice
+//with git hub
+//cant wait for this to work amazingly!
+
 //room object template: 
 /*roomName = {
   status: "locked" "unlocked" 
