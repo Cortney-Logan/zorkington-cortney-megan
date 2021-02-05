@@ -12,10 +12,24 @@ function ask(questionText) {
     readlineInterface.question(questionText, resolve);
   });
 }
+//rooms class 
 
-//room objects
 
-//item objects
+//room key
+
+
+// items class 
+
+
+//items key 
+
+
+//actions key 
+
+
+//state machine 
+
+
 
 
 
@@ -33,10 +47,10 @@ async function start() {
   //core of game - expects user input to move through rooms and interact with items.  Will continue to loop until the user enters 'exit'
   while (answer !== "exit") {
     if (answer.toLowerCase().trim() == "yes") {
-      enter(greatHall);
-    currentRoom = greatHall;
-    console.log("this is in the if statement")
-    console.log(currentRoom)
+    currentRoom = rooms["greatHall"]; 
+    enter(rooms["greatHall"]);
+    //console.log("this is in the if statement")
+    //console.log(currentRoom)
     }
 
     answer = await ask("_");
@@ -55,7 +69,7 @@ async function start() {
       switch (true) {
         //Megan
         case answer.includes("move"):
-        console.log("this is within the switch statement:" + currentRoom)
+        //console.log("this is within the switch statement:" + currentRoom)
         move(answer, currentRoom);
         break;
         //Megan
@@ -129,7 +143,21 @@ function answerToArr(answer) {
 }
 
 //list of all the rooms and their qualities
-let gryffindorCommon = {
+
+let rooms = {
+greatHall : {
+  roomName : "great hall", 
+  status: "unlocked",
+  roomDescription:
+    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
+  items: ["sorting hat", "treacle tart"],
+  possibleDirections: ["north", "south", "east"],
+  north: this.gryffindorCommon,
+  west: false,
+  //south: [ChamberOfSecrets],
+  //east: [darkArtsClass]
+},
+gryffindorCommon : {
   status: "unlocked",
   roomDescription: [`Here dwell the brave at heart,
   their daring, nerve, and chivalry,
@@ -137,38 +165,14 @@ let gryffindorCommon = {
   
   The fire is roaring and the students are lounging. You overhear bits of conversations among the past heads of Gryffindor (all the way back to Godrick Gryffindor), as they appear and vanish in their portrait frames that line the walls. What is your move?`]
 }
-let greatHall = {
-  roomName : "great hall", 
-  status: "unlocked",
-  roomDescription:
-    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
-  items: ["sorting hat", "treacle tart"],
-  possibleDirections: ["north", "south", "east"],
-  north: {gryffindorCommon},
-  west: false,
-  //south: [ChamberOfSecrets],
-  //east: [darkArtsClass]
-};
 
 
-
-//enter function
-function enter(currentRoom) {
-let rooms = {
-  greatHall: {
-    status: "unlocked",
-    roomDescription:
-      "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see Professor McGonagall with the Sorting Hat. What would you like to do?",
-    items: ["sorting hat", "treacle tart"],
-    possibleDirections: ["north", "south", "east"],
-    north: "gryffindorCommon",
-    west: false,
-    south: "ChamberOfSecrets",
+ 
   },
-};
+
 
 //define items within the item object
-let items = {
+items = {
   sortingHat: {
     description: "here is a description for the sorting hat",
     movability: "permanent",
@@ -228,14 +232,14 @@ let mapOfItems = {
   "tom's diary": "riddleDiary",
   "riddle diary": "riddleDiary",
   "tom riddle diary": "riddleDiary",
-  // n: "north",
-  // s: "south",
-  // e: "east",
-  // w: "west",
-  // north: "north",
-  // south: "south",
-  // east: "east",
-  // west: "west",
+  n: "north",
+  s: "south",
+  e: "east",
+  w: "west",
+  north: "north",
+  south: "south",
+  east: "east",
+  west: "west",
 };
 
 //list of actions
@@ -272,18 +276,19 @@ function checkRoom(item, currentRoom) {
 }
 
 //enter room function
-function enter(room) {
-  currentRoom = room;
-  console.log(currentRoom.roomDescription);
+function enter(currentRoom) {
+  console.log(currentRoom);
   console.log(typeof(currentRoom))
-  console.log(typeof(gryffindorCommon.roomDescription))
-  console.log("this is in the enter function") 
-  console.log(currentRoom)
+  console.log(rooms[currentRoom].roomDescription);
+  //console.log(typeof(currentRoom))
+  //console.log(typeof(gryffindorCommon.roomDescription))
+  //console.log("this is in the enter function") 
+  //console.log(currentRoom)
 }
-//move function 
+//move function
 function move (answer, currentRoom) {
   let direction = "";
- console.log("this is the first console.log in the move function")
+ //console.log("this is the first console.log in the move function")
  console.log(currentRoom)
   //assign direction to direction entered 
   if (answer.trim().toLowerCase().includes("south")) {
@@ -313,32 +318,13 @@ if (currentRoom[direction] !== false) {
   console.log("Oh no! You've reached the castle wall. You can't go this way.")
 }
 
-let direction = "south";
-function move() {
-  switch (true) {
-    case answer.includes("south"):
-      console.log("moving south");
-      direction = "south";
-      break;
-    case answer.includes("north"):
-      direction = "north";
-      break;
-    case answer.includes("east"):
-      direction = "east";
-      break;
-    case answer.includes("west"):
-      direction = "west";
-      break;
-    default:
-      start();
-  }
-}
+
 //look around the room and see the items! 
 function lookAround() {
-  let items = currentRoom.items;
-  console.log(`You look around and you see the following items: ${items}`)
+  let currentItems = currentRoom.items;
+  console.log(`You look around and you see the following items: ${currentItems}`)
 }
-
+}
 
 
 
