@@ -14,9 +14,100 @@ function ask(questionText) {
 }
 //rooms class 
 
+class Room {
+  constructor (isUnlocked, roomDescription, itemsInRoom, north, east, south, west) {
+    this.isUnlocked = isUnlocked;
+    this.roomDescription = roomDescription;
+    this.itemsInRoom = itemsInRoom; 
+    this.north = north; 
+    this.east = east; 
+    this.south = south; 
+    this.west = west
+  }
+
+  enter() {
+    console.log(this.roomDescription);
+  }
+
+  move (answer) {
+    let direction = "";
+   //console.log("this is the first console.log in the move function")
+  
+    //assign direction to direction entered 
+    if (answer.trim().toLowerCase().includes("south")) {
+      direction = "south"
+    } else if (answer.trim().toLowerCase().includes("north")) {
+      direction = "north"; 
+    } else if (answer.trim().toLowerCase().includes("east")) {
+      direction = "east" 
+    } else if (answer.trim().toLowerCase().includes("west")) {
+      direction = "west" 
+    } else {
+      console.log("Gotta figure this out");
+  }
+  console.log(this.direction)
+  //check and see if direction is true/false 
+  if (this.direction!== false) {
+    //if true, the value that belongs to the direction key is the room in that direction, so go enter that room
+    currentRoom = this.direction;
+    this.enter(currentRoom)
+    //if not, we want error message 
+  } else {
+    console.log("Oh no! You've reached the castle wall. You can't go this way.")
+  }
+  }
+  
+  //look around the room and see the items! 
+  lookAround(currentRoom) {
+    let currentItems = currentRoom.items;
+    console.log(`You look around and you see the following items: ${currentItems}`)
+  }
+
+}
+// list of all of our rooms:
+let greatHall = new Room(true, "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?", ["sorting hat", "treacle tart"], "gryffindorCommon", "darkArtsClass", "chamberOfSecrets", false)
+
+let gryffindorCommon = new Room(true, `Here dwell the brave at heart,
+their daring, nerve, and chivalry,
+set Gryffindors apart!
+
+The fire is roaring and the students are lounging. You overhear bits of conversations among the past heads of Gryffindor (all the way back to Godrick Gryffindor), as they appear and vanish in their portrait frames that line the walls. You see a glimmering fabric in the corner of the room. What is your move?`, ["invisibility cloak", "portrait of Godrick Gryffindor"], false, "library", "greatHall", false)
+
+let library = new Room("unlocked", `Welcome to the Hogwarts library, where tens of thousands of books on thousands of shelves.`, ["A brief history of the Room of Requirement", "Tom Riddle's Diary"], false, false, "darkArtsClass", "gryffindorCommon")
+
+let darkArtsClass = new Room(true, `You are now in the Defense Against the Dark Arts classroom.  Who is teaching this year?  You really shouldn’t bother figuring out, they’ll be gone before too long….
+
+Several rows of desks line the classroom, the professor’s desk is cluttered with copies of Advanced Potion-Making and scrolls.`, ["Advanced Potion-Making textbook", "scroll"], "library", false, "roomOfRequirement", "greatHall")
+
+let chamberOfSecrets = new Room(false, ` Enemies of the Heir, beware! The Chamber of Secrets has been opened! You are standing in a large pipe at the entrance to the Chamber. In front of you is the decaying skeleton of the Basilisk.  Near its giant head you see a glimmer of light.`, ["mirror", "House Cup"], "greatHall", "roomOfRequirement", false, false)
+
+let roomOfRequirement = new Room(false, `Welcome to the Room of Requirement! As Dobby describes it to Harry Potter, “It is a room that a person can only enter when they have real need of it. Sometimes it is there, and sometimes it is not, but when it appears, it is always equipped for the seeker's needs."  You look around and notice many items left by other students who were once in need.`, ["Vanishing Cabinet", "basilisk fang", "Sword of Godrick Gryffindor"], "darkArtsClass", false, false, "chamberOfSecrets")
 
 //room key
+let roomKey = {
+  "gryffindorCommon" : gryffindorCommon,
+  "gryffindor common room" : gryffindorCommon, 
+  "gryffindor common" : gryffindorCommon, 
+  "gryffindorcommon" : gryffindorCommon, 
+  "common room": gryffindorCommon, 
+  "library": library,
+  "greatHall" : greatHall,
+  "greathall" : greatHall, 
+  "great hall": greatHall,
+  "darkArtsClass" : darkArtsClass,
+  "dark arts": darkArtsClass, 
+  "dark arts class": darkArtsClass,
+  "darkartsclass": darkArtsClass,
+  "dark arts classroom" : darkArtsClass, 
+  "classroom" : darkArtsClass,
+  "chamberOfSecrets": chamberOfSecrets,
+  "chamber of secrets": chamberOfSecrets,
+  "chamberofsecrets" : chamberOfSecrets,
+  "roomOfRequirement" : roomOfRequirement, 
+  "room of requirement" : roomOfRequirement
+}
 
+//directionkey 
 
 // items class 
 
@@ -27,9 +118,7 @@ function ask(questionText) {
 //actions key 
 
 
-//state machine 
-
-
+//state machine //Megan made this as a statehold
 
 
 
@@ -47,10 +136,9 @@ async function start() {
   //core of game - expects user input to move through rooms and interact with items.  Will continue to loop until the user enters 'exit'
   while (answer !== "exit") {
     if (answer.toLowerCase().trim() == "yes") {
-    currentRoom = rooms["greatHall"]; 
-    enter(rooms["greatHall"]);
+    currentRoom = greatHall; 
+    greatHall.enter();
     //console.log("this is in the if statement")
-    //console.log(currentRoom)
     }
 
     answer = await ask("_");
@@ -69,12 +157,13 @@ async function start() {
       switch (true) {
         //Megan
         case answer.includes("move"):
-        //console.log("this is within the switch statement:" + currentRoom)
-        move(answer, currentRoom);
+        console.log("this is within the switch statement:")
+        console.log(currentRoom)
+        currentRoom.move(answer);
         break;
         //Megan
         case answer.includes("look around"):
-          lookAround();
+          this.lookAround();
           break;
         //Kavitha
         case answer.includes("take"):
@@ -143,32 +232,6 @@ function answerToArr(answer) {
 }
 
 //list of all the rooms and their qualities
-
-let rooms = {
-greatHall : {
-  roomName : "great hall", 
-  status: "unlocked",
-  roomDescription:
-    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
-  items: ["sorting hat", "treacle tart"],
-  possibleDirections: ["north", "south", "east"],
-  north: this.gryffindorCommon,
-  west: false,
-  //south: [ChamberOfSecrets],
-  //east: [darkArtsClass]
-},
-gryffindorCommon : {
-  status: "unlocked",
-  roomDescription: [`Here dwell the brave at heart,
-  their daring, nerve, and chivalry,
-  set Gryffindors apart!
-  
-  The fire is roaring and the students are lounging. You overhear bits of conversations among the past heads of Gryffindor (all the way back to Godrick Gryffindor), as they appear and vanish in their portrait frames that line the walls. What is your move?`]
-}
-
-
- 
-  },
 
 
 //define items within the item object
@@ -276,58 +339,8 @@ function checkRoom(item, currentRoom) {
 }
 
 //enter room function
-function enter(currentRoom) {
-  console.log(currentRoom);
-  console.log(typeof(currentRoom))
-  console.log(rooms[currentRoom].roomDescription);
-  //console.log(typeof(currentRoom))
-  //console.log(typeof(gryffindorCommon.roomDescription))
-  //console.log("this is in the enter function") 
-  //console.log(currentRoom)
-}
+
 //move function
-function move (answer, currentRoom) {
-  let direction = "";
- //console.log("this is the first console.log in the move function")
- console.log(currentRoom)
-  //assign direction to direction entered 
-  if (answer.trim().toLowerCase().includes("south")) {
-    direction = "south"
-  } else if (answer.trim().toLowerCase().includes("north")) {
-    direction = "north"; 
-  } else if (answer.trim().toLowerCase().includes("east")) {
-    direction = "east" 
-  } else if (answer.trim().toLowerCase().includes("west")) {
-    direction = "west" 
-  } else {
-    console.log("Gotta figure this out");
-}
-console.log("current direction =" + direction)
-console.log("this is in the move function after the if/else statements")
-console.log(currentRoom)
-console.log(currentRoom[direction])
-console.log("this is at the end of the move function")
-console.log(currentRoom.roomDescription)
-//check and see if direction is true/false 
-if (currentRoom[direction] !== false) {
-  //if true, the value that belongs to the direction key is the room in that direction, so go enter that room
-  currentRoom = currentRoom[direction];
-  enter(currentRoom)
-  //if not, we want error message 
-} else {
-  console.log("Oh no! You've reached the castle wall. You can't go this way.")
-}
-
-
-//look around the room and see the items! 
-function lookAround() {
-  let currentItems = currentRoom.items;
-  console.log(`You look around and you see the following items: ${currentItems}`)
-}
-}
-
-
-
 
 //room object template:
 /*roomName = {
