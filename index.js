@@ -42,48 +42,6 @@ async function start() {
     answer = await ask("_");
     answer = answer.toLowerCase().trim();
 
-    //EDIT THIS TO COMBINE: 
-    console.log(answer);
-    console.log("this is in the while statement")
-    console.log(currentRoom)
-    switch (true) {
-      //Megan
-      case answer.includes("move"):
-        console.log("this is within the switch statement:" + currentRoom)
-        move(answer, currentRoom);
-        break;
-      //Megan
-      case answer.includes("look around"):
-        lookAround();
-        break;
-      //Cortney
-      case answer.includes("examine"):
-        examine();
-        break;
-      //Cortney
-      case answer.includes("read"):
-        read();
-        break;
-      //Cortney
-      case answer.includes("greet"):
-        greet();
-        break;
-      //Kavitha
-      case answer.includes("take"):
-        take();
-        break;
-      //Kavitha
-      case answer.includes("check inventory"):
-        checkInventory();
-        break;
-      /*case answer.includes("drop"):
-        drop();
-        break;*/  //Kavitha
-
-      default:
-        console.log(`Sorry, I don't know how to ${answer}.`);
-    }
-
     //accepts answer and breaks out into verb and noun
     answerArr = answerToArr(answer);
 
@@ -97,8 +55,9 @@ async function start() {
       switch (true) {
         //Megan
         case answer.includes("move"):
-          move();
-          break;
+        console.log("this is within the switch statement:" + currentRoom)
+        move(answer, currentRoom);
+        break;
         //Megan
         case answer.includes("look around"):
           lookAround();
