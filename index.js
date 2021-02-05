@@ -68,6 +68,9 @@ async function start() {
       case answer.includes("check inventory"):
         checkInventory();
         break;
+      /*case answer.includes("drop"):
+        drop();
+        break;*/  //Kavitha
 
       default:
         console.log(`Sorry, I don't know how to ${answer}.`);
@@ -115,14 +118,16 @@ function move() {
   }
 }
 
+
+
 ///adding in some comments for practice
 //with git hub
 //cant wait for this to work amazingly!
 
 //room object template:
 /*roomName = {
-  status: "locked" "unlocked" 
-  "roomDescription": " ", 
-  items: [ ]  
-  possibleDirections: , 
+  status: "locked" "unlocked"
+  "roomDescription": " ",
+  items: [ ]
+  possibleDirections: ,
 }*/
