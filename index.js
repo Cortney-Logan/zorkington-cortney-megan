@@ -27,10 +27,10 @@ start();
 async function start() {
   //declares variable to store current room
   let currentRoom = "";
-  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n`;
+  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n_`;
   let answer = await ask(welcomeMessage);
   while (answer.toLowerCase().trim() !== "yes") {
-    answer = await ask("Say yes when you're ready to begin!\n");
+    answer = await ask("Say yes when you're ready to begin!\n_");
   }
   //the user has said yes - show them the room description for the first room
   enter(greatHall);
@@ -44,27 +44,27 @@ async function start() {
       case answer.includes("move"):
         move();
         break;
-        //Megan
+      //Megan
       case answer.includes("look around"):
         lookAround();
         break;
-        //Cortney
+      //Cortney
       case answer.includes("examine"):
         examine();
         break;
-        //Cortney
+      //Cortney
       case answer.includes("read"):
         read();
         break;
-        //Cortney
+      //Cortney
       case answer.includes("greet"):
         greet();
         break;
-        //Kavitha
+      //Kavitha
       case answer.includes("take"):
         take();
         break;
-        //Kavitha
+      //Kavitha
       case answer.includes("check inventory"):
         checkInventory();
         break;
@@ -77,42 +77,43 @@ async function start() {
   process.exit();
 }
 
-//list of all the rooms and their qualities 
-rooms = {
-greatHall = {
-  status: "unlocked", 
-  roomDescription: "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?", 
-  items: ["sorting hat", "treacle tart"], 
-  possibleDirections:["north", "south", "east"],
-  north: gryffindorCommon,
-  west: false, 
-  south: ChamberOfSecrets, 
-}, 
+//list of all the rooms and their qualities
 
-}
+greatHall = {
+  status: "unlocked",
+  roomDescription:
+    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
+  items: ["sorting hat", "treacle tart"],
+  possibleDirections: ["north", "south", "east"],
+  north: "gryffindorCommon",
+  west: false,
+  south: "ChamberOfSecrets",
+};
 
 function enter(room) {
   currentRoom = room;
   console.log(currentRoom.roomDescription);
 }
 
-let direction = "south" 
-function move () {
+let direction = "south";
+function move() {
   switch (true) {
-    case answer.includes("south") : direction = "south"; 
-    break; 
-    case answer.includes("north") : direction = "north"; 
-    break; 
-    case answer.includes("east") : direction = "east" 
-    break; 
-    case answer.includes("west") : direction = "west" 
-    break; 
-    default start();
+    case answer.includes("south"):
+      direction = "south";
+      break;
+    case answer.includes("north"):
+      direction = "north";
+      break;
+    case answer.includes("east"):
+      direction = "east";
+      break;
+    case answer.includes("west"):
+      direction = "west";
+      break;
+    default:
+      start();
   }
-
-  }
-
-
+}
 
 ///adding in some comments for practice
 //with git hub
