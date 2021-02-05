@@ -317,3 +317,66 @@ function move() {
 }*/
 
 //create item class
+/*let inventory = []
+class checkInventory {
+  constructor(name, description, takeable) {
+    this.name = name,// name of the object
+      this.description = description,// text about the object when player grabs it
+    this.takeable = takeable
+  }
+  moreInfo() {
+    return (this.description)
+  }
+  take() {
+    if (this.takeable) {
+      inventory.push(this.name)
+      return ('you have picked ' + this.name + ', you have ' + inventory)
+    }
+    else {
+      return ("you can't take that " + this.description)
+    }
+    
+  }
+
+
+}
+
+let diary = new checkInventory('diary', 'Tom Riddle’s Diary', true)
+console.log(diary.take())
+let scroll = new checkInventory('scroll', 'Instructions', false)
+console.log(scroll.take())
+let fabric = new checkInventory('fabric', 'description',true)
+console.log(fabric.take())
+let Horcrux = new checkInventory('Horcrux', 'description', false)
+console.log(Horcrux.take())
+let TreacleTart = new checkInventory('Treacle Tart', 'Tom Riddle’s Diary', true)
+console.log(TreacleTart.take())
+let sortingHat = new checkInventory('Sorting Hat', 'Tom Riddle’s Diary', false)
+console.log(sortingHat.take())
+let book = new checkInventory('Book', 'Tom Riddle’s Diary', true)
+console.log(book.take())
+let paper = new checkInventory('Paper', 'Tom Riddle’s Diary', false)
+console.log(paper.take())
+
+drop();
+
+
+//would like to drop an item
+// yes
+//which item
+//1=diary, 2= scroll.....
+//player inputs a number of the item to be dropped
+
+ async function drop()
+{
+  console.log("which item would you like to drop?")
+  
+  for (i=0;i<inventory.length;i++){
+  console.log(i +"-" +inventory[i])
+}
+userInp= await ask('please input the item number to be removed: ')
+
+  inventory.splice(parseInt(userInp),1)// index,how many item to be removed
+  console.log( 'you have ' + inventory)
+}
+*/
