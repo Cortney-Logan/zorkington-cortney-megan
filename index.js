@@ -17,24 +17,25 @@ function ask(questionText) {
 
 //item objects
 
-//enter function displays the room description
-function enterRoom() {
-  //stuff that makes you enter room
+function enter(room) {
+  currentRoom = room;
+  console.log(currentRoom.roomDescription);
 }
 
 start();
-
+let currentRoom = "";
 async function start() {
   //declares variable to store current room
-  let currentRoom = "";
   const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n`;
   let answer = await ask(welcomeMessage);
   while (answer.toLowerCase().trim() !== "yes") {
     answer = await ask("Say yes when you're ready to begin!\n");
   }
   //the user has said yes - show them the room description for the first room
-  enter(greatHall);
-
+  if (answer.toLowerCase().trim() == "yes") {
+    enter(greatHall);
+  currentRoom = greatHall;
+  }
   while (answer !== "exit") {
     answer = await ask("_");
     answer = answer.toLowerCase().trim();
@@ -78,38 +79,42 @@ async function start() {
 }
 
 //list of all the rooms and their qualities 
-rooms = {
-greatHall = {
+//let rooms = {
+let greatHall = {
   status: "unlocked", 
-  roomDescription: "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?", 
+  roomDescription: "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?", 
   items: ["sorting hat", "treacle tart"], 
   possibleDirections:["north", "south", "east"],
-  north: gryffindorCommon,
+  north: "gryffindor common",
   west: false, 
-  south: ChamberOfSecrets, 
-}, 
+  south: "chamber of secrets", 
+  east: "dark arts class" 
+},
+/*gryffindorCommon : {}, 
+library : {},
+darkArtsClass: {}, 
+chamberOfSecrets : {}, 
+roomOfRequirement : {}
+} */
 
-}
 
-function enter(room) {
-  currentRoom = room;
-  console.log(currentRoom.roomDescription);
-}
 
-let direction = "south" 
+
+let direction = "south";
+
 function move () {
   switch (true) {
     case answer.includes("south") : direction = "south"; 
-    break; 
+    break; x
     case answer.includes("north") : direction = "north"; 
     break; 
     case answer.includes("east") : direction = "east" 
     break; 
     case answer.includes("west") : direction = "west" 
     break; 
-    default start();
+    default : console.log("Gotta figure this out");
   }
-
+  console.log(direction)
   }
 
 
