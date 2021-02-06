@@ -13,11 +13,12 @@ function ask(questionText) {
   });
 }
 //-------Player-----//
-let player = {
-  name: "Player1",
-  inventory: [],
-  currentRoom: "",
-};
+//defines an object to hold information about the player
+// let player = {
+//   name: "Player1",
+//   inventory: [],
+//   currentRoom: "",
+// };
 
 //--------------------Rooms------------------------------//
 
@@ -178,14 +179,24 @@ let roomKey = {
 //---------------------------Items----------------------------//
 let inventory = [];
 class checkInventory {
-  constructor(name, description, takeable) {
-    (this.name = name), // name of the object
-      (this.description = description), // text about the object when player grabs it
-      (this.takeable = takeable);
+  constructor(name, descriptionTxt, readTxt, greetTxt, takeable) {
+    this.name = name; // name of the object
+    this.descriptionTxt = descriptionTxt; // text about the object when player grabs it
+    this.readTxt = readTxt; // text about the object when the player reads it
+    this.greetTxt = greetTxt; // text about the object when the player greets it
+    this.takeable = takeable;
   }
   examine() {
-    return this.description;
+    return this.descriptionTxt;
   }
+  read() {
+    return this.readTxt;
+  }
+
+  greet() {
+    return this.greetTxt;
+  }
+
   take() {
     if (this.takeable) {
       inventory.push(this.name);
@@ -206,11 +217,20 @@ let horcrux = new checkInventory("Horcrux", "description", false);
 //console.log(Horcrux.take())
 let treacleTart = new checkInventory(
   "Treacle Tart",
-  "Tom Riddle’s Diary",
+  "Hogwart's treacle tarts are made to perfection with a flakey pastry and golden syrup; and of course no soggy bottoms.",
+  "You cannot read the treacle tart",
+  "Not everything in Hogwarts is living...you can't greet a treacle tart.",
   true
 );
+
 //console.log(TreacleTart.take())
-let sortingHat = new checkInventory("Sorting Hat", "Tom Riddle’s Diary", false);
+let sortingHat = new checkInventory(
+  "Sorting Hat",
+  "\"Oh you may not think I'm pretty, but don't judge on what you see, I'll eat myself if you can find a smarter hat than me.\"",
+  "You cannot read the Sorting Hat",
+  "Hello. I am the Sorting Hat.  I have a clue for you!  The answer lies in the secret chamber south of this great room.  To enter you must possess that which will make you invisible to those around you.",
+  false
+);
 //console.log(sortingHat.take())
 let book = new checkInventory("Book", "Tom Riddle’s Diary", true);
 //console.log(book.take())
@@ -324,6 +344,7 @@ async function start() {
       currentRoom = greatHall;
       greatHall.enter();
     }
+
     //prompts user for input
     answer = await ask(">_");
 
@@ -332,13 +353,12 @@ async function start() {
 
     //accepts answer and breaks out into action and noun
     let answerArr = splitAnswer(answer);
-
     //declares variables to hold the answerAction and answerItem
     let answerAction = answerArr[0];
     let answerItem = answerArr[1];
 
-    //validate the user input to confirm the user has provided a valid action and item.  If they have the answerArr will have length 2
-    if (answerArr.length === 2) {
+    //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
+    if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
           console.log("moving!");
@@ -362,57 +382,22 @@ async function start() {
           console.log("checking inventory!");
           checkInventory();
           break;
-        default:
-          console.log(itemKey[answerItem].description);
+        case "examine":
+          console.log("examine!");
+          console.log(`itemKey[answerItem] is ${itemKey[answerItem]}`);
+          console.log(itemKey[answerItem].examine());
+          break;
+        case "read":
+          console.log(itemKey[answerItem].read());
+          break;
+        case "greet":
+          console.log("greeting!");
+          console.log(`itemKey[answerItem] is ${itemKey[answerItem]}`);
+          console.log(itemKey[answerItem].greet());
+          break;
       }
     } else console.log(`Sorry, I don't know how to ${answer}.`);
   }
   console.log("Goodbye!");
   process.exit();
 }
-
-// items = {
-//   sortingHat: {
-//     description: "here is a description for the sorting hat",
-//     movability: "permanent",
-//     currentRoom: "greatHall",
-//     examine: () => {
-//       return "\"Oh you may not think I'm pretty, but don't judge on what you see, I'll eat myself if you can find a smarter hat than me.\"";
-//     },
-//     read: () => {
-//       return "You cannot read the Sorting Hat";
-//     },
-//     greet: () => {
-//       return "Hello. I am the Sorting Hat.  I have a clue for you!  The answer lies in the secret chamber south of this great room.  To enter you must pocess that which will make you invisible to those around you.";
-//     },
-//     //include take, drop, use(?)
-//   },
-//   treacleTart: {
-//     description: "here is a description for the treacle tart",
-//     movability: "removable",
-//     currentRoom: "greatHall",
-//     examine: () => {
-//       return "Hogwart's treacle tarts are made to perfection with a flakey pastry and golden syrup; and of course no soggy bottoms.";
-//     },
-//     read: () => {
-//       return "You cannot read the treacle tart";
-//     },
-//     greet: () => {
-//       return "Not everything in Hogwarts is living...you can't greet a treacle tart.";
-//     },
-//   },
-//   riddleDiary: {
-//     description: "here is a description for Tom Riddle's Diary",
-//     movability: "removable",
-//     currentRoom: "gryffindorCommonRoom",
-//     examine: () => {
-//       return "You are examining the diary";
-//     },
-//     read: () => {
-//       return "You are reading the diary";
-//     },
-//     greet: () => {
-//       return "Hello. I am the diary of Tom Riddle";
-//     },
-//   },
-// };
