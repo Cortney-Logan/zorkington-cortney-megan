@@ -67,20 +67,19 @@ class Room {
   }
 
   //look around the room and see the items!
-
-  lookAround(currentRoom) {
-    let currentItems = currentRoom.items;
-    console.log(
-      `You look around and you see the following items: ${currentItems}`
-    );
-  }
+  
+ lookAround() {
+   let currentItems = player.currentRoom.itemsInRoom;
+   console.log("You look around and you see the following items:")
+   for (let item of currentItems) console.log(item);
+}
 }
 // list of all of our rooms:
 let greatHall = new Room(
   true,
-  "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
-  ["sorting hat", "treacle tart"],
-  "gryffindorCommon",
+  "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. If you look around you'll see many things! What would you like to do?",
+  ["\nsorting hat", "\ntreacle tart"],
+  "gryffindorCommon", 
   "darkArtsClass",
   "chamberOfSecrets",
   false
@@ -378,7 +377,7 @@ function checkRoom(item, currentRoom) {
 start();
 async function start() {
   //declares variable to store current room
-  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n>_`;
+  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it as you move north, south, east, and west around the castle to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n>_`;
   let answer = await ask(welcomeMessage);
   while (answer.toLowerCase().trim() !== "yes") {
     answer = await ask("Say yes when you're ready to begin!\n>_");
@@ -392,6 +391,7 @@ async function start() {
     }
 
     //prompts user for input
+
     answer = await ask(">_");
 
     //sanitize answer
@@ -410,9 +410,8 @@ async function start() {
         case "move":
           player.currentRoom.move(answerItem);
           break;
-        case "look":
-          console.log("looking around!");
-          // lookAround();
+        case "look" :
+          player.currentRoom.lookAround();
           break;
         case "drop":
           console.log("dropping!");
