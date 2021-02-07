@@ -45,37 +45,38 @@ class Room {
     console.log(this.roomDescription);
   }
 
-  move(answer) {
-    let direction = "";
-    //console.log("this is the first console.log in the move function")
+  // move(answer) {
+  //   let direction = "";
+  //   //console.log("this is the first console.log in the move function")
 
-    //assign direction to direction entered
-    if (answer.trim().toLowerCase().includes("south")) {
-      direction = "south";
-    } else if (answer.trim().toLowerCase().includes("north")) {
-      direction = "north";
-    } else if (answer.trim().toLowerCase().includes("east")) {
-      direction = "east";
-    } else if (answer.trim().toLowerCase().includes("west")) {
-      direction = "west";
-    } else {
-      console.log("Gotta figure this out");
-    }
-    console.log(this.direction);
-    //check and see if direction is true/false
-    if (this.direction !== false) {
-      //if true, the value that belongs to the direction key is the room in that direction, so go enter that room
-      currentRoom = this.direction;
-      this.enter(currentRoom);
-      //if not, we want error message
-    } else {
-      console.log(
-        "Oh no! You've reached the castle wall. You can't go this way."
-      );
-    }
-  }
+  //   //assign direction to direction entered
+  //   if (answer.trim().toLowerCase().includes("south")) {
+  //     direction = "south";
+  //   } else if (answer.trim().toLowerCase().includes("north")) {
+  //     direction = "north";
+  //   } else if (answer.trim().toLowerCase().includes("east")) {
+  //     direction = "east";
+  //   } else if (answer.trim().toLowerCase().includes("west")) {
+  //     direction = "west";
+  //   } else {
+  //     console.log("Gotta figure this out");
+  //   }
+  //   console.log(this.direction);
+  //   //check and see if direction is true/false
+  //   if (this.direction !== false) {
+  //     //if true, the value that belongs to the direction key is the room in that direction, so go enter that room
+  //     currentRoom = this.direction;
+  //     this.enter(currentRoom);
+  //     //if not, we want error message
+  //   } else {
+  //     console.log(
+  //       "Oh no! You've reached the castle wall. You can't go this way."
+  //     );
+  //   }
+  // }
 
   //look around the room and see the items!
+  
   lookAround(currentRoom) {
     let currentItems = currentRoom.items;
     console.log(
@@ -334,10 +335,8 @@ function checkPlayerInventory() {
 async function drop() {
   console.log("which item would you like to drop?");
 
-  let i = 0;
-  while (i < player.inventory.length) {
+  for(let i=0; i<player.inventory.length; i++){
     console.log(i + "-" + player.inventory[i]);
-    i++;
   }
   userInp = await ask("please input the item number to be removed: ");
 
@@ -438,18 +437,9 @@ async function start() {
           break;
         case "drop":
           console.log("dropping!");
+          drop();
           break;
-          // //checks item is in inventory else breaks
-          // //console.log(`Item key [answeritem] is ${toString(itemKey[answerItem])}`)
-          // if (player.inventory.includes("Treacle Tart")) {
-          //   dropInventory(itemKey[answerItem].drop());
-          //   dropInventory(answerItem);
-          //   break;
-          // } else {
-          //   console.log(`You do not have ${answerItem} in your inventory.`);
-          //   break;
-          // }
-        // //add item to current room
+        //add item to current room
         case "check":
           checkPlayerInventory();
           break;
