@@ -50,7 +50,6 @@ class Room {
   move(answerItem) {
     let direction = answerItem;
     let newRoom = roomKey[this[direction]];
-
     if (this[direction]) {
       if (newRoom.isUnlocked) {
         player.currentRoom = roomKey[this[direction]];
