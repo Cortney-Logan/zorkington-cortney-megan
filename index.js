@@ -41,25 +41,56 @@ class Room {
     this.west = west;
   }
 
-  //when entering a new room, the room discription method is accessed which prints the room discription
+  //when entering a new room, the room description method is accessed which prints the room description
   enter() {
     console.log(this.roomDescription);
   }
 
-  //
+  //function to move a character into a new room
   move(answerItem) {
+    //declares a variable to hold the direction the user wants to move
     let direction = answerItem;
+    //declares a variable that holds what the target room is based on the directional properties in the current room
     let newRoom = roomKey[this[direction]];
+    //if there is a value in the requested direction from the current room is true, there is a room that can be entered
     if (this[direction]) {
+      //if a new room is locked, checks unlock conditions for access
+      if (!newRoom.isUnlocked) {
+        //check if unlock conditions are met for the currently locked room
+        switch (newRoom) {
+          case "chamberOfSecrets":
+            if (player.inventory.includes("Treacle Tart")) {
+              roomKey[newRoom].isUnlocked = true;
+              break;
+            } else {
+              console.log("This room is locked!");
+              break;
+            }
+          case "roomOfRequirement":
+            console.log("you are trying to access the room of requirement");
+              let password = await ask(
+                "To enter this room you must say the magic words. If you know them please enter them now: "
+              );
+              if (password === "open.") {
+                console.log("you've opened the room of requirement");
+                roomKey[newRoom].isUnlocked = true;
+                roomOfRequirement.enter();
+                break;
+              } else {
+                console.log("This room is locked!");
+                break;
+              }
+        }
+      }
+      //checks if the new room is locked by accessing the isUnlocked property of the new room
       if (newRoom.isUnlocked) {
+        //if the room is unlocked, enter the new room and change the player's current room property to the new room
         player.currentRoom = roomKey[this[direction]];
         player.currentRoom.enter();
-      } else {
-        console.log("The room is locked!");
-        //checklock conditions
-        //checkForAccess()
       }
-    } else {
+    }
+    //if the value of the requested direction from the current room is false, the player cannot move in that direction
+    else {
       console.log(
         "You've encountered Filch who carries deep disdain in his heart for wandering students. You can't go this way!"
       );
@@ -67,19 +98,19 @@ class Room {
   }
 
   //look around the room and see the items!
-  
- lookAround() {
-   let currentItems = player.currentRoom.itemsInRoom;
-   console.log("You look around and you see the following items:")
-   for (let item of currentItems) console.log(item);
-}
+
+  lookAround() {
+    let currentItems = player.currentRoom.itemsInRoom;
+    console.log("You look around and you see the following items:");
+    for (let item of currentItems) console.log(item);
+  }
 }
 // list of all of our rooms:
 let greatHall = new Room(
   true,
   "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. If you look around you'll see many things! What would you like to do?",
   ["\nsorting hat", "\ntreacle tart"],
-  "gryffindorCommon", 
+  "gryffindorCommon",
   "darkArtsClass",
   "chamberOfSecrets",
   false
@@ -373,6 +404,34 @@ function checkRoom(item, currentRoom) {
   return items[mapOfItems[item]].currentRoom === currentRoom;
 }
 
+//checks the requirements for access for the locked rooms in the game
+async function checkForAccess(room) {
+  switch (room) {
+    case "chamberOfSecrets":
+      if (player.inventory.includes("Treacle Tart")) {
+        roomKey[room].isUnlocked = true;
+        break;
+      } else {
+        console.log("This room is locked!");
+        break;
+      }
+    case "roomOfRequirement":
+      console.log("you are trying to access the room of requirement");
+        let password = await ask(
+          "To enter this room you must say the magic words. If you know them please enter them now: "
+        );
+        if (password === "open.") {
+          console.log("you've opened the room of requirement");
+          roomKey[room].isUnlocked = true;
+          roomOfRequirement.enter();
+          break;
+        } else {
+          console.log("This room is locked!");
+          break;
+        }
+  }
+}
+
 //----------------------Play game-------------------------------------------------//
 start();
 async function start() {
@@ -389,7 +448,7 @@ async function start() {
       player.currentRoom = greatHall;
       greatHall.enter();
     }
-
+    
     //prompts user for input
 
     answer = await ask(">_");
@@ -405,12 +464,14 @@ async function start() {
 
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
     directionArray = ["north", "east", "south", "west"];
+
+    console.log("right before if statement");
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
           player.currentRoom.move(answerItem);
           break;
-        case "look" :
+        case "look":
           player.currentRoom.lookAround();
           break;
         case "drop":
