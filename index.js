@@ -391,6 +391,7 @@ async function start() {
     }
 
     //prompts user for input
+
     answer = await ask(">_");
 
     //sanitize answer
