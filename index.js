@@ -59,19 +59,18 @@ move (answerItem) {
 
   //look around the room and see the items!
   
-  lookAround(currentRoom) {
-    let currentItems = currentRoom.items;
-    console.log(
-      `You look around and you see the following items: ${currentItems}`
-    );
-  }
+ lookAround() {
+   let currentItems = player.currentRoom.itemsInRoom;
+   console.log("You look around and you see the following items:")
+   for (let item of currentItems) console.log(item);
+}
 }
 // list of all of our rooms:
 let greatHall = new Room(
   true,
-  "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
-  ["sorting hat", "treacle tart"],
-  "gryffindorCommon",
+  "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. If you look around you'll see many things! What would you like to do?",
+  ["\nsorting hat", "\ntreacle tart"],
+  "gryffindorCommon", 
   "darkArtsClass",
   "chamberOfSecrets",
   false
@@ -202,7 +201,6 @@ let diary = new checkInventory(
   "greet diary",
   true
 );
-// console.log(diary.take())
 let scroll = new checkInventory(
   "scroll",
   "Instructions",
@@ -210,7 +208,6 @@ let scroll = new checkInventory(
   "greet scroll",
   false
 );
-//console.log(scroll.take())
 let fabric = new checkInventory(
   "fabric",
   "fabric description",
@@ -218,7 +215,6 @@ let fabric = new checkInventory(
   "greet fabric",
   true
 );
-//console.log(fabric.take())
 let horcrux = new checkInventory(
   "Horcrux",
   "horcrux description",
@@ -226,7 +222,6 @@ let horcrux = new checkInventory(
   "greet horcrux",
   false
 );
-//console.log(Horcrux.take())
 let treacleTart = new checkInventory(
   "Treacle Tart",
   "Hogwart's treacle tarts are made to perfection with a flakey pastry and golden syrup; and of course no soggy bottoms.",
@@ -234,7 +229,6 @@ let treacleTart = new checkInventory(
   "Not everything in Hogwarts is living...you can't greet a treacle tart.",
   true
 );
-//console.log(TreacleTart.take())
 let sortingHat = new checkInventory(
   "Sorting Hat",
   "\"Oh you may not think I'm pretty, but don't judge on what you see, I'll eat myself if you can find a smarter hat than me.\"",
@@ -242,7 +236,6 @@ let sortingHat = new checkInventory(
   "Hello. I am the Sorting Hat.  I have a clue for you!  The answer lies in the secret chamber south of this great room.  To enter you must possess that which will make you invisible to those around you.",
   false
 );
-//console.log(sortingHat.take())
 let book = new checkInventory(
   "Book",
   "book description",
@@ -250,7 +243,6 @@ let book = new checkInventory(
   "greet book",
   true
 );
-//console.log(book.take())
 let paper = new checkInventory(
   "Paper",
   "paper description",
@@ -258,7 +250,6 @@ let paper = new checkInventory(
   "greet paper",
   false
 );
-//console.log(paper.take())
 
 //items key
 let itemKey = {
@@ -279,14 +270,14 @@ let itemKey = {
   south: "south",
   east: "east",
   west: "west",
-  room: "room",
+  around: "around"
 };
 
 //--------------------------------------------Actions---------------------------------------//
 //action key
 let listOfActions = {
   move: ["move", "go"],
-  "look around": ["look around"],
+  "look": ["look"],
   check: ["check"],
   take: ["take"],
   drop: ["drop"],
@@ -377,7 +368,7 @@ function checkRoom(item, currentRoom) {
 start();
 async function start() {
   //declares variable to store current room
-  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n>_`;
+  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it as you move north, south, east, and west around the castle to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n>_`;
   let answer = await ask(welcomeMessage);
   while (answer.toLowerCase().trim() !== "yes") {
     answer = await ask("Say yes when you're ready to begin!\n>_");
@@ -404,16 +395,14 @@ async function start() {
     let answerItem = answerArr[1];
 
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
-    directionArray = ["north", "east", "south", "west"]
+    directionArray = ["north", "east", "south", "west"];
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
           player.currentRoom.move(answerItem);
           break;
-        case "look around":
-          //change to examine room?
-          console.log("looking around!");
-          lookAround();
+        case "look" :
+          player.currentRoom.lookAround();
           break;
         case "drop":
           console.log("dropping!");
