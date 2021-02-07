@@ -14,11 +14,11 @@ function ask(questionText) {
 }
 //-------Player-----//
 //defines an object to hold information about the player
-// let player = {
-//   name: "Player1",
-//   inventory: [],
-//   currentRoom: "",
-// };
+let player = {
+  name: "Player1",
+  inventory: [],
+  currentRoom: "",
+};
 
 //--------------------Rooms------------------------------//
 
@@ -86,7 +86,7 @@ class Room {
 // list of all of our rooms:
 let greatHall = new Room(
   true,
-  "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts!.In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
+  "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. What would you like to do?",
   ["sorting hat", "treacle tart"],
   "gryffindorCommon",
   "darkArtsClass",
@@ -177,7 +177,6 @@ let roomKey = {
 //directionkey
 
 //---------------------------Items----------------------------//
-let inventory = [];
 class checkInventory {
   constructor(name, descriptionTxt, readTxt, greetTxt, takeable) {
     this.name = name; // name of the object
@@ -199,21 +198,51 @@ class checkInventory {
 
   take() {
     if (this.takeable) {
-      inventory.push(this.name);
-      return "you have picked " + this.name + ", you have " + inventory;
+      player.inventory.push(this.name);
+      return (
+        "You have picked up the " + this.name + ", you have " + player.inventory
+      );
     } else {
-      return "you can't take that " + this.description;
+      return "You can't take the " + this.name;
     }
+  }
+
+  drop() {
+    return this.name;
   }
 }
 
-let diary = new checkInventory("diary", "Tom Riddle’s Diary", true);
+let diary = new checkInventory(
+  "diary",
+  "Tom Riddle’s Diary",
+  "read diary",
+  "greet diary",
+  true
+);
 // console.log(diary.take())
-let scroll = new checkInventory("scroll", "Instructions", false);
+let scroll = new checkInventory(
+  "scroll",
+  "Instructions",
+  "read scroll",
+  "greet scroll",
+  false
+);
 //console.log(scroll.take())
-let fabric = new checkInventory("fabric", "description", true);
+let fabric = new checkInventory(
+  "fabric",
+  "fabric description",
+  "read fabric",
+  "greet fabric",
+  true
+);
 //console.log(fabric.take())
-let horcrux = new checkInventory("Horcrux", "description", false);
+let horcrux = new checkInventory(
+  "Horcrux",
+  "horcrux description",
+  "read horcrux",
+  "greet horcrux",
+  false
+);
 //console.log(Horcrux.take())
 let treacleTart = new checkInventory(
   "Treacle Tart",
@@ -222,7 +251,6 @@ let treacleTart = new checkInventory(
   "Not everything in Hogwarts is living...you can't greet a treacle tart.",
   true
 );
-
 //console.log(TreacleTart.take())
 let sortingHat = new checkInventory(
   "Sorting Hat",
@@ -232,9 +260,21 @@ let sortingHat = new checkInventory(
   false
 );
 //console.log(sortingHat.take())
-let book = new checkInventory("Book", "Tom Riddle’s Diary", true);
+let book = new checkInventory(
+  "Book",
+  "book description",
+  "read book",
+  "greet book",
+  true
+);
 //console.log(book.take())
-let paper = new checkInventory("Paper", "Tom Riddle’s Diary", false);
+let paper = new checkInventory(
+  "Paper",
+  "paper description",
+  "read paper",
+  "greet paper",
+  false
+);
 //console.log(paper.take())
 
 //items key
@@ -251,7 +291,7 @@ let itemKey = {
   "tom's diary": diary,
   "riddle diary": diary,
   "tom riddle diary": diary,
-  inventory: inventory,
+  inventory: player.inventory,
   north: "north",
   south: "south",
   east: "east",
@@ -264,12 +304,25 @@ let itemKey = {
 let listOfActions = {
   move: ["move", "go"],
   "look around": ["look around"],
+  check: ["check"],
   take: ["take"],
   drop: ["drop"],
   examine: ["examine", "look at"],
   read: ["read"],
   greet: ["greet"],
 };
+
+//function to check player inventory
+function checkPlayerInventory() {
+  //if inventory is not empty prints out what is in inventory
+  if (player.inventory.length > 0) {
+    console.log(`You're inventory includes: ${player.inventory.join(", ")}`);
+  }
+  //if inventory is empty
+  else {
+    console.log(`You have nothing in your inventory.`);
+  }
+}
 
 //drop function
 //would like to drop an item
@@ -281,13 +334,25 @@ let listOfActions = {
 async function drop() {
   console.log("which item would you like to drop?");
 
-  for (i = 0; i < inventory.length; i++) {
-    console.log(i + "-" + inventory[i]);
+  let i = 0;
+  while (i < player.inventory.length) {
+    console.log(i + "-" + player.inventory[i]);
+    i++;
   }
   userInp = await ask("please input the item number to be removed: ");
 
-  inventory.splice(parseInt(userInp), 1); // index,how many item to be removed
-  console.log("you have " + inventory);
+  player.inventory.splice(parseInt(userInp), 1); // index,how many item to be removed
+  console.log("you have " + player.inventory);
+  console.log(`still here 1`);
+  return;
+}
+
+//drops inventory based on input
+function dropInventory(item) {
+  let index = player.inventory.indexOf(item);
+  console.log(index); //finds item in player.inventory
+  //removes from player.inventory
+  //adds item to currentRoom.itemsInRoom
 }
 
 //state machine //Megan made this as a statehold
@@ -341,7 +406,7 @@ async function start() {
   while (answer !== "exit") {
     //the user has said yes - show them the room description for the first room
     if (answer.toLowerCase().trim() === "yes") {
-      currentRoom = greatHall;
+      player.currentRoom = greatHall;
       greatHall.enter();
     }
 
@@ -367,33 +432,39 @@ async function start() {
           // currentRoom.move(answer);
           break;
         case "look around":
+          //change to examine room?
           console.log("looking around!");
           lookAround();
           break;
-        case "take":
-          console.log("taking!");
-          take();
-          break;
         case "drop":
           console.log("dropping!");
-          drop();
           break;
+          // //checks item is in inventory else breaks
+          // //console.log(`Item key [answeritem] is ${toString(itemKey[answerItem])}`)
+          // if (player.inventory.includes("Treacle Tart")) {
+          //   dropInventory(itemKey[answerItem].drop());
+          //   dropInventory(answerItem);
+          //   break;
+          // } else {
+          //   console.log(`You do not have ${answerItem} in your inventory.`);
+          //   break;
+          // }
+        // //add item to current room
         case "check":
-          console.log("checking inventory!");
-          checkInventory();
+          checkPlayerInventory();
           break;
         case "examine":
-          console.log("examine!");
-          console.log(`itemKey[answerItem] is ${itemKey[answerItem]}`);
           console.log(itemKey[answerItem].examine());
           break;
         case "read":
           console.log(itemKey[answerItem].read());
           break;
         case "greet":
-          console.log("greeting!");
-          console.log(`itemKey[answerItem] is ${itemKey[answerItem]}`);
           console.log(itemKey[answerItem].greet());
+          break;
+        case "take":
+          console.log(itemKey[answerItem].take());
+          //NEED(?): removes item from room
           break;
       }
     } else console.log(`Sorry, I don't know how to ${answer}.`);
