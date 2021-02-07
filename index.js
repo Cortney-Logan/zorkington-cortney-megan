@@ -202,7 +202,6 @@ let diary = new checkInventory(
   "greet diary",
   true
 );
-// console.log(diary.take())
 let scroll = new checkInventory(
   "scroll",
   "Instructions",
@@ -210,7 +209,6 @@ let scroll = new checkInventory(
   "greet scroll",
   false
 );
-//console.log(scroll.take())
 let fabric = new checkInventory(
   "fabric",
   "fabric description",
@@ -218,7 +216,6 @@ let fabric = new checkInventory(
   "greet fabric",
   true
 );
-//console.log(fabric.take())
 let horcrux = new checkInventory(
   "Horcrux",
   "horcrux description",
@@ -226,7 +223,6 @@ let horcrux = new checkInventory(
   "greet horcrux",
   false
 );
-//console.log(Horcrux.take())
 let treacleTart = new checkInventory(
   "Treacle Tart",
   "Hogwart's treacle tarts are made to perfection with a flakey pastry and golden syrup; and of course no soggy bottoms.",
@@ -234,7 +230,6 @@ let treacleTart = new checkInventory(
   "Not everything in Hogwarts is living...you can't greet a treacle tart.",
   true
 );
-//console.log(TreacleTart.take())
 let sortingHat = new checkInventory(
   "Sorting Hat",
   "\"Oh you may not think I'm pretty, but don't judge on what you see, I'll eat myself if you can find a smarter hat than me.\"",
@@ -242,7 +237,6 @@ let sortingHat = new checkInventory(
   "Hello. I am the Sorting Hat.  I have a clue for you!  The answer lies in the secret chamber south of this great room.  To enter you must possess that which will make you invisible to those around you.",
   false
 );
-//console.log(sortingHat.take())
 let book = new checkInventory(
   "Book",
   "book description",
@@ -250,7 +244,6 @@ let book = new checkInventory(
   "greet book",
   true
 );
-//console.log(book.take())
 let paper = new checkInventory(
   "Paper",
   "paper description",
@@ -258,7 +251,6 @@ let paper = new checkInventory(
   "greet paper",
   false
 );
-//console.log(paper.take())
 
 //items key
 let itemKey = {
@@ -279,14 +271,14 @@ let itemKey = {
   south: "south",
   east: "east",
   west: "west",
-  room: "room",
+  around: "around"
 };
 
 //--------------------------------------------Actions---------------------------------------//
 //action key
 let listOfActions = {
   move: ["move", "go"],
-  "look around": ["look around"],
+  "look": ["look"],
   check: ["check"],
   take: ["take"],
   drop: ["drop"],
@@ -403,16 +395,15 @@ async function start() {
     let answerItem = answerArr[1];
 
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
-    directionArray = ["north", "east", "south", "west"]
+    directionArray = ["north", "east", "south", "west"];
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
           player.currentRoom.move(answerItem);
           break;
-        case "look around":
-          //change to examine room?
+        case "look":
           console.log("looking around!");
-          lookAround();
+          // lookAround();
           break;
         case "drop":
           console.log("dropping!");
