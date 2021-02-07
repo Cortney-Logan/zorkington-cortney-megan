@@ -41,24 +41,34 @@ class Room {
     this.west = west;
   }
 
+  //when entering a new room, the room discription method is accessed which prints the room discription
   enter() {
     console.log(this.roomDescription);
   }
 
-move (answerItem) {
-  let direction = answerItem; 
-  if (this[direction]) {
-    if (this.isUnlocked) {
-    player.currentRoom = roomKey[this[direction]];
-    player.currentRoom.enter()
-    } else {console.log("The room is locked!")}
-} else {console.log("You've encountered Filch who carries deep disdain in his heart for wandering students. You can't go this way!")
+  //
+  move(answerItem) {
+    let direction = answerItem;
+    let newRoom = roomKey[this[direction]];
 
-}
-}
+    if (this[direction]) {
+      if (newRoom.isUnlocked) {
+        player.currentRoom = roomKey[this[direction]];
+        player.currentRoom.enter();
+      } else {
+        console.log("The room is locked!");
+        //checklock conditions
+        //checkForAccess()
+      }
+    } else {
+      console.log(
+        "You've encountered Filch who carries deep disdain in his heart for wandering students. You can't go this way!"
+      );
+    }
+  }
 
   //look around the room and see the items!
-  
+
   lookAround(currentRoom) {
     let currentItems = currentRoom.items;
     console.log(
@@ -92,7 +102,7 @@ The fire is roaring and the students are lounging. You overhear bits of conversa
 );
 
 let library = new Room(
-  "unlocked",
+  true,
   `Welcome to the Hogwarts library, where tens of thousands of books on thousands of shelves.`,
   ["A brief history of the Room of Requirement", "Tom Riddle's Diary"],
   false,
@@ -271,14 +281,14 @@ let itemKey = {
   south: "south",
   east: "east",
   west: "west",
-  around: "around"
+  around: "around",
 };
 
 //--------------------------------------------Actions---------------------------------------//
 //action key
 let listOfActions = {
   move: ["move", "go"],
-  "look": ["look"],
+  look: ["look"],
   check: ["check"],
   take: ["take"],
   drop: ["drop"],
@@ -309,7 +319,7 @@ function checkPlayerInventory() {
 async function drop() {
   console.log("which item would you like to drop?");
 
-  for(let i=0; i<player.inventory.length; i++){
+  for (let i = 0; i < player.inventory.length; i++) {
     console.log(i + "-" + player.inventory[i]);
   }
   userInp = await ask("please input the item number to be removed: ");
