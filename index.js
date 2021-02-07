@@ -48,46 +48,14 @@ class Room {
 move (answerItem) {
   let direction = answerItem; 
   if (this[direction]) {
-    console.log(this[direction]) 
+    if (this.isUnlocked) {
+    player.currentRoom = roomKey[this[direction]];
+    player.currentRoom.enter()
+    } else {console.log("The room is locked!")}
+} else {console.log("You've encountered Filch who carries deep disdain in his heart for wandering students. You can't go this way!")
+
 }
 }
-//answer item=direction(string)
-//if current room is a string, use rooms key to convert to object 
-//current room is object:
-  // current room object[ direction]
-  //if true: current room = object[direction]
-  //if false: message: you have reached end of castle
-  
-
-  // move(answer) {
-  //   let direction = "";
-  //   //console.log("this is the first console.log in the move function")
-
-  //   //assign direction to direction entered
-  //   if (answer.trim().toLowerCase().includes("south")) {
-  //     direction = "south";
-  //   } else if (answer.trim().toLowerCase().includes("north")) {
-  //     direction = "north";
-  //   } else if (answer.trim().toLowerCase().includes("east")) {
-  //     direction = "east";
-  //   } else if (answer.trim().toLowerCase().includes("west")) {
-  //     direction = "west";
-  //   } else {
-  //     console.log("Gotta figure this out");
-  //   }
-  //   console.log(this.direction);
-  //   //check and see if direction is true/false
-  //   if (this.direction !== false) {
-  //     //if true, the value that belongs to the direction key is the room in that direction, so go enter that room
-  //     currentRoom = this.direction;
-  //     this.enter(currentRoom);
-  //     //if not, we want error message
-  //   } else {
-  //     console.log(
-  //       "Oh no! You've reached the castle wall. You can't go this way."
-  //     );
-  //   }
-  // }
 
   //look around the room and see the items!
   
@@ -422,8 +390,6 @@ async function start() {
       greatHall.enter();
     }
 
-    console.log(player.currentRoom)
-
     //prompts user for input
     answer = await ask(">_");
 
@@ -437,12 +403,11 @@ async function start() {
     let answerItem = answerArr[1];
 
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
+    directionArray = ["north", "east", "south", "west"]
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
-          console.log("moving!");
-          console.log(typeof(player.currentRoom))
-          player.currentRoom.move(answerItem); 
+          player.currentRoom.move(answerItem);
           break;
         case "look around":
           //change to examine room?
