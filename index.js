@@ -45,6 +45,20 @@ class Room {
     console.log(this.roomDescription);
   }
 
+move (answerItem) {
+  let direction = answerItem; 
+  if (this[direction]) {
+    console.log(this[direction]) 
+}
+}
+//answer item=direction(string)
+//if current room is a string, use rooms key to convert to object 
+//current room is object:
+  // current room object[ direction]
+  //if true: current room = object[direction]
+  //if false: message: you have reached end of castle
+  
+
   // move(answer) {
   //   let direction = "";
   //   //console.log("this is the first console.log in the move function")
@@ -395,7 +409,6 @@ function checkRoom(item, currentRoom) {
 start();
 async function start() {
   //declares variable to store current room
-  let currentRoom = "";
   const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n>_`;
   let answer = await ask(welcomeMessage);
   while (answer.toLowerCase().trim() !== "yes") {
@@ -408,6 +421,8 @@ async function start() {
       player.currentRoom = greatHall;
       greatHall.enter();
     }
+
+    console.log(player.currentRoom)
 
     //prompts user for input
     answer = await ask(">_");
@@ -426,9 +441,8 @@ async function start() {
       switch (answerAction) {
         case "move":
           console.log("moving!");
-          // console.log("this is within the switch statement:");
-          // console.log(currentRoom);
-          // currentRoom.move(answer);
+          console.log(typeof(player.currentRoom))
+          player.currentRoom.move(answerItem); 
           break;
         case "look around":
           //change to examine room?
