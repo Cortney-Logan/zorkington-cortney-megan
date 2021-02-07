@@ -41,33 +41,63 @@ class Room {
     this.west = west;
   }
 
-  //when entering a new room, the room discription method is accessed which prints the room discription
+  //when entering a new room, the room description method is accessed which prints the room description
   enter() {
     console.log(this.roomDescription);
   }
 
-  //
+  //function to move a character into a new room
   move(answerItem) {
+    //declares a variable to hold the direction the user wants to move
     let direction = answerItem;
+    //declares a variable that holds what the target room is based on the directional properties in the current room
     let newRoom = roomKey[this[direction]];
-
+    //if there is a value in the requested direction from the current room is true, there is a room that can be entered
     if (this[direction]) {
+      //if a new room is locked, checks unlock conditions for access
+      if (!newRoom.isUnlocked) {
+        //check if unlock conditions are met for the currently locked room
+        switch (newRoom) {
+          case "chamberOfSecrets":
+            if (player.inventory.includes("Treacle Tart")) {
+              roomKey[newRoom].isUnlocked = true;
+              break;
+            } else {
+              console.log("This room is locked!");
+              break;
+            }
+          case "roomOfRequirement":
+            console.log("you are trying to access the room of requirement");
+              let password = await ask(
+                "To enter this room you must say the magic words. If you know them please enter them now: "
+              );
+              if (password === "open.") {
+                console.log("you've opened the room of requirement");
+                roomKey[newRoom].isUnlocked = true;
+                roomOfRequirement.enter();
+                break;
+              } else {
+                console.log("This room is locked!");
+                break;
+              }
+        }
+      }
+      //checks if the new room is locked by accessing the isUnlocked property of the new room
       if (newRoom.isUnlocked) {
+        //if the room is unlocked, enter the new room and change the player's current room property to the new room
         player.currentRoom = roomKey[this[direction]];
         player.currentRoom.enter();
-      } else {
-        console.log("The room is locked!");
-        //checklock conditions
-        //checkForAccess()
       }
-    } else {
+    }
+    //if the value of the requested direction from the current room is false, the player cannot move in that direction
+    else {
       console.log(
         "You've encountered Filch who carries deep disdain in his heart for wandering students. You can't go this way!"
       );
     }
   }
 
-  //look around the room and see the items!
+  //look around the room and see the room's inventory: 
   
  lookAround() {
    let currentItems = player.currentRoom.itemsInRoom;
@@ -80,7 +110,7 @@ let greatHall = new Room(
   true,
   "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see professor MgGonnagall with the sorting hat. If you look around you'll see many things! What would you like to do?",
   ["\nsorting hat", "\ntreacle tart"],
-  "gryffindorCommon", 
+  "gryffindorCommon",
   "darkArtsClass",
   "chamberOfSecrets",
   false
@@ -103,7 +133,7 @@ The fire is roaring and the students are lounging. You overhear bits of conversa
 let library = new Room(
   true,
   `Welcome to the Hogwarts library, where tens of thousands of books on thousands of shelves.`,
-  ["A brief history of the Room of Requirement", "Tom Riddle's Diary"],
+  ["A scroll which contains a brief history of the Room of Requirement", "Tom Riddle's Diary"],
   false,
   false,
   "darkArtsClass",
@@ -213,31 +243,31 @@ class checkInventory {
 
 let diary = new checkInventory(
   "diary",
-  "Tom Riddle’s Diary",
-  "read diary",
-  "greet diary",
+  "When Tom Marvolo Riddle was in his fifth year at Hogwarts, he achieved his goal of locating Salazar Slytherin's Chamber of Secrets and used his ability to speak Parseltongue to open it. He further used this language ability to order the Chamber's Basilisk to terrorise the school and hunt down the Muggle-born students. Eventually one of the Muggle-borns, a Ravenclaw girl named Myrtle Warren, was killed. Riddle would later use this murder to infuse the journal with a piece of his soul, and transformed it into his first Horcrux.",
+  "You open the diary to read the first page but AAAAAHHHHHHHH THE PAIN OF THE SCREECHING IS UNBEARABLE! You close it.",
+  "This is the diary of Tom Riddle",
   true
 );
+let portrait = new checkInventory (
+  "portrait", 
+  "Godric Gryffindor valued courage, determination, chivalry, and strength of heart. Here his portrait lies as a memory of being one of teh four most brilliant witches and wizards of his time.",
+  "There are no words to read here!",
+  "As a reminder, witches and wizards, the only way to fully extinguish a horcrux is to use basilisk venom or an object imbued with basilisk venom.",
+  false
+); 
 let scroll = new checkInventory(
   "scroll",
-  "Instructions",
-  "read scroll",
-  "greet scroll",
+  "A scroll reads 'A brief history of the Room of Requirement",
+  "The room of requirement is reserved for those who are truly in need. In order to gain access, you must say 'I am in great need.' thrice",
+  "You probably should not green inanimate objects.",
   false
 );
 let fabric = new checkInventory(
   "fabric",
-  "fabric description",
-  "read fabric",
-  "greet fabric",
+  `Aparecium! You reveal that the glimmering fabric is in fact the famous invisibility cloak! The cloak has been described as one which "endures eternally, giving constant and impenetrable concealment, no matter what spells are cast at it." According to the legend, Ignotus Peverell was given the cloak by Death in the 13th century as a reward for having bested him. Whether the legend is true or not, the cloak became a family heirloom and was inherited by Ignotus' descendents, including James Potter and eventually his son, Harry Potter who given it as a gift on Christmas day 1991.`,
+  "You cannot read a cloak!",
+  "Hello cloak, hello player.",
   true
-);
-let horcrux = new checkInventory(
-  "Horcrux",
-  "horcrux description",
-  "read horcrux",
-  "greet horcrux",
-  false
 );
 let treacleTart = new checkInventory(
   "Treacle Tart",
@@ -276,6 +306,10 @@ let itemKey = {
   sortinghat: sortingHat,
   "sorting hat": sortingHat,
   hat: sortingHat,
+  fabric: fabric,
+  "invisibility cloak": fabric,
+  "cloak": fabric, 
+ "cloak of invisibility":fabric,
   diary: diary,
   "tom riddle's diary": diary,
   "riddle's diary": diary,
@@ -293,14 +327,14 @@ let itemKey = {
 //--------------------------------------------Actions---------------------------------------//
 //action key
 let listOfActions = {
-  move: ["move", "go"],
-  look: ["look"],
+  move: ["move","travel","go", "walk"],
+  look: ["look", "scan", "survey", "view"],
   check: ["check"],
-  take: ["take"],
-  drop: ["drop"],
-  examine: ["examine", "look at"],
+  take: ["take", "steal", "remove", "extract", "accio", "confiscate"],
+  drop: ["drop", "abandon", "depulso", "let go of", "release", "reliquish", "set down", "leave"],
+  examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
-  greet: ["greet"],
+  greet: ["greet", "address", "meet", ],
 };
 
 //function to check player inventory
@@ -375,6 +409,34 @@ function checkRoom(item, currentRoom) {
   return items[mapOfItems[item]].currentRoom === currentRoom;
 }
 
+//checks the requirements for access for the locked rooms in the game
+async function checkForAccess(room) {
+  switch (room) {
+    case "chamberOfSecrets":
+      if (player.inventory.includes("Treacle Tart")) {
+        roomKey[room].isUnlocked = true;
+        break;
+      } else {
+        console.log("This room is locked!");
+        break;
+      }
+    case "roomOfRequirement":
+      console.log("you are trying to access the room of requirement");
+        let password = await ask(
+          "To enter this room you must say the magic words. If you know them please enter them now: "
+        );
+        if (password === "open.") {
+          console.log("you've opened the room of requirement");
+          roomKey[room].isUnlocked = true;
+          roomOfRequirement.enter();
+          break;
+        } else {
+          console.log("This room is locked!");
+          break;
+        }
+  }
+}
+
 //----------------------Play game-------------------------------------------------//
 start();
 async function start() {
@@ -407,12 +469,14 @@ async function start() {
 
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
     directionArray = ["north", "east", "south", "west"];
+
+    console.log("right before if statement");
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
           player.currentRoom.move(answerItem);
           break;
-        case "look" :
+        case "look":
           player.currentRoom.lookAround();
           break;
         case "drop":
