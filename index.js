@@ -244,8 +244,7 @@ class checkInventory {
   
       player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
         console.log("you have " + player.inventory +"left in your inventory");
-       
-        return;
+        
       }
  
   
