@@ -68,7 +68,7 @@ class Room {
             }
           case "roomOfRequirement":
             console.log("you are trying to access the room of requirement");
-              let password = await ask(
+              let password = ask(
                 "To enter this room you must say the magic words. If you know them please enter them now: "
               );
               if (password === "open.") {
@@ -104,6 +104,16 @@ class Room {
    console.log("You look around and you see the following items:")
    for (let item of currentItems) console.log(item);
 }
+
+drop(answerItem,take)
+{
+  if(take){
+  player.currentRoom.itemsInRoom.splice(player.currentRoom.itemsInRoom.indexOf(answerItem),1)}
+  else return;
+}
+
+
+
 }
 // list of all of our rooms:
 let greatHall = new Room(
@@ -234,7 +244,7 @@ class checkInventory {
   
       player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
         console.log("you have " + player.inventory +"left in your inventory");
-        //console.log(`still here 1`);
+       
         return;
       }
  
@@ -330,7 +340,7 @@ let listOfActions = {
   move: ["move","travel","go", "walk"],
   look: ["look", "scan", "survey", "view"],
   check: ["check"],
-  take: ["take", "steal", "remove", "extract", "accio", "confiscate"],
+  take: ["take", "steal", "remove", "extract", "accio", "confiscate","pick"],
   drop: ["drop", "abandon", "depulso", "let go of", "release", "reliquish", "set down", "leave"],
   examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
@@ -349,30 +359,10 @@ function checkPlayerInventory() {
   }
 }
 
-//drop function
-//would like to drop an item
-// yes
-//which item
-//1=diary, 2= scroll.....
-//player inputs a number of the item to be dropped
 
- /*function drop(answerItem) {
-  
-player.inventory.splice(indexOf(answerItem), 1); // index,how many item to be removed
-  console.log("you have " + player.inventory);
-  //console.log(`still here 1`);
-  return;
-}*/
 
-//drops inventory based on input
-function dropInventory(item) {
-  let index = player.inventory.indexOf(item);
-  console.log(index); //finds item in player.inventory
-  //removes from player.inventory
-  //adds item to currentRoom.itemsInRoom
-}
 
-//state machine //Megan made this as a statehold
+
 
 //----------------------------------------Functions-------------------------------//
 
@@ -470,7 +460,7 @@ async function start() {
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
     directionArray = ["north", "east", "south", "west"];
 
-    console.log("right before if statement");
+
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
@@ -481,6 +471,7 @@ async function start() {
           break;
         case "drop":
           console.log(itemKey[answerItem].drop());
+          player.currentRoom.itemsInRoom.push((itemKey[answerItem].name))
           break;
         //add item to current room
         case "check":
@@ -495,8 +486,10 @@ async function start() {
         case "greet":
           console.log(itemKey[answerItem].greet());
           break;
-        case "take":
-          console.log(itemKey[answerItem].take());
+          case "take":
+            console.log(itemKey[answerItem].take());
+            player.currentRoom.drop(itemKey[answerItem],itemKey[answerItem].takeable)
+           // player.currentRoom.itemsInRoom.splice(player.currentRoom.itemsInRoom.indexOf(itemKey[answerItem]),1)
           //NEED(?): removes item from room
           break;
       }
