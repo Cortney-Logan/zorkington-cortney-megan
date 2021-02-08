@@ -31,10 +31,10 @@ let player = {
 // - takeable (boolean indicating if the object is takable or not)
 class checkInventory {
   constructor(name, descriptionTxt, readTxt, greetTxt, takeable) {
-    this.name = name; // name of the object
-    this.descriptionTxt = descriptionTxt; // text about the object when player grabs it
-    this.readTxt = readTxt; // text about the object when the player reads it
-    this.greetTxt = greetTxt; // text about the object when the player greets it
+    this.name = name;
+    this.descriptionTxt = descriptionTxt;
+    this.readTxt = readTxt;
+    this.greetTxt = greetTxt;
     this.takeable = takeable;
   }
   examine() {
@@ -50,7 +50,7 @@ class checkInventory {
 
   take() {
     if (this.takeable) {
-      //adds item to players inventory
+      //adds item to players inventory array
       player.inventory.push(this.name);
       return (
         "You have picked up the " +
@@ -64,6 +64,7 @@ class checkInventory {
   }
 
   drop() {
+    //removes item from player inventory
     player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
     console.log(`You have dropped the ${this.name}`);
     if (player.inventory.length > 0) {
@@ -303,16 +304,17 @@ class Room {
     console.log("You look around and you see the following items:");
     for (let item of currentItems) console.log(item);
   }
-  
-  //drop from room
-  drop(answerItem,take)
-  {
-    if(take){
-      //added .name
-    player.currentRoom.itemsInRoom.splice(player.currentRoom.itemsInRoom.indexOf(answerItem.name),1)}
-    else return;
-  }
 
+  //drop from room
+  drop(answerItem, take) {
+    if (take) {
+      //if the item is takeable - find the item in the currentRoom.itemsInRoom array and remove it
+      player.currentRoom.itemsInRoom.splice(
+        player.currentRoom.itemsInRoom.indexOf(answerItem.name),
+        1
+      );
+    } else return;
+  }
 }
 //declares each of the rooms
 let greatHall = new Room(
@@ -407,7 +409,7 @@ let roomKey = {
 //action key - given a string input maps to the corresponding action
 let listOfActions = {
   move: ["move", "travel", "go", "walk"],
-  look: ["look", "scan", "survey", "view","la"],
+  look: ["look", "scan", "survey", "view", "la"],
   check: ["check"],
   take: ["take", "steal", "remove", "extract", "accio", "confiscate", "pick"],
   drop: [
@@ -423,7 +425,7 @@ let listOfActions = {
   examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
   greet: ["greet", "address", "meet"],
-  unlock: ["open open open", "openopenopen"]
+  unlock: ["open open open", "openopenopen"],
 };
 
 //function to check player inventory
@@ -479,7 +481,9 @@ function checkWin() {
       player.inventory.includes(sword.name) ||
       player.inventory.includes(basiliskFang.name)
     ) {
-      console.log("You are in the Chamber of Secrets.  Tom Riddle's Diary does not stand a chance now that you have the proper tools to destroy it.  As the last horcrux to destroy you have now completed your quest to vanquish Lord Voldemort once and for all.  You are indeed The Chose One.\nCongratulations. You Win!");
+      console.log(
+        "You are in the Chamber of Secrets.  Tom Riddle's Diary does not stand a chance now that you have the proper tools to destroy it.  As the last horcrux to destroy you have now completed your quest to vanquish Lord Voldemort once and for all.  You are indeed The Chose One.\nCongratulations. You Win!"
+      );
       process.exit();
     }
   }
@@ -546,10 +550,10 @@ async function start() {
         case "unlock":
           currentRoom = player.currentRoom;
           //since answer item is direction, currentRoom[answerItem] is identify what room you're moving too: in this case it's the roomOfRequirement
-          let newRoom = roomKey[(currentRoom[answerItem])]
+          let newRoom = roomKey[currentRoom[answerItem]];
           //keeps new room unlocked
-          newRoom.isUnlocked = true
-          player.currentRoom.move(answerItem)
+          newRoom.isUnlocked = true;
+          player.currentRoom.move(answerItem);
           break;
         //if answerAction is look - trigger lookAround method
         case "look":
@@ -583,7 +587,10 @@ async function start() {
           //check item is in the current room
           console.log(itemKey[answerItem].take());
           //calls drop method on rooms to remove item from room
-          player.currentRoom.drop(itemKey[answerItem],itemKey[answerItem].takeable);
+          player.currentRoom.drop(
+            itemKey[answerItem],
+            itemKey[answerItem].takeable
+          );
           break;
       }
       // //check win and lose conditions
