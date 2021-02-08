@@ -71,9 +71,11 @@ class checkInventory {
       .....
 
       ${chosenHouse}`)
-    } else {
+    } else if (this.name == "Invisibility Cloak" && player.inventory.includes("Invisibility Cloak")) {
+      console.log("You're invisible!")
+    } else 
       console.log("You can't put that on!")
-    }
+    
   }
 
   take() {
@@ -542,7 +544,6 @@ async function start() {
       //sets the currentRoom as the greatHall.  This is stored in the player object
       player.currentRoom = greatHall;
       greatHall.enter();
-      console.log("in if statement with entering greathall")
     }
 
     //prompts user for input
