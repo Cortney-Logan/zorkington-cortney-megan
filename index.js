@@ -48,6 +48,34 @@ class checkInventory {
     return this.greetTxt;
   }
 
+  putOn() {
+    if (this.name == "Sorting Hat") {
+      let houseArray = [
+        "Gryffindor!", "Slytherin!", "Hufflepuff!", "Ravenclaw"
+      ];
+      let chosenHouse = houseArray[Math.round(3*Math.random())];
+      console.log(
+      `Welcome, welcome, one and all
+      the show is about to start
+      I'm the Hogwarts Sorting Hat
+      and it's time to play my part
+      You may call me worn and ragged
+      if that's all you truly see
+      But listen close and I will tell
+      where you're supposed to be!
+      Go ahead and try me on
+      there's nothing left to fear
+      I'll find right where you belong
+      by looking between your ears!
+
+      .....
+
+      ${chosenHouse}`)
+    } else {
+      console.log("You can't put that on!")
+    }
+  }
+
   take() {
     if (this.takeable) {
       //adds item to players inventory array
@@ -424,8 +452,9 @@ let listOfActions = {
   ],
   examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
-  greet: ["greet", "address", "meet"],
+  greet: ["greet", "address", "talk to", "say hi", "meet"],
   unlock: ["open open open", "openopenopen"],
+  putOn: ["put on"]
 };
 
 //function to check player inventory
@@ -513,6 +542,7 @@ async function start() {
       //sets the currentRoom as the greatHall.  This is stored in the player object
       player.currentRoom = greatHall;
       greatHall.enter();
+      console.log("in if statement with entering greathall")
     }
 
     //prompts user for input
@@ -583,6 +613,9 @@ async function start() {
           console.log(itemKey[answerItem].greet());
           break;
         //if answerAction is take - trigger take method
+        case "putOn":
+          itemKey[answerItem].putOn();
+          break 
         case "take":
           //check item is in the current room
           console.log(itemKey[answerItem].take());
