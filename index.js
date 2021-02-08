@@ -479,7 +479,7 @@ function checkWin() {
       player.inventory.includes(sword.name) ||
       player.inventory.includes(basiliskFang.name)
     ) {
-      console.log("You win.");
+      console.log("You are in the Chamber of Secrets.  Tom Riddle's Diary does not stand a chance now that you have the proper tools to destroy it.  As the last horcrux to destroy you have now completed your quest to vanquish Lord Voldemort once and for all.  You are indeed The Chose One.\nCongratulations. You Win!");
       process.exit();
     }
   }
