@@ -458,7 +458,7 @@ function splitAnswer(answer) {
         answerArr[0] = action;
       }
     });
-    //for each item, if the item is included in the itemKey, return the valid item and store in asnwerArr1[]
+    //for each item, if the item is included in the itemKey, return the valid item and store in asnwerArr[1]
     itemKeys.forEach((item) => {
       if (answer.includes(item)) {
         answerArr[1] = item;
@@ -506,7 +506,7 @@ async function checkForAccess(room) {
 //------------------------------Play game------------------------------//
 async function start() {
   //welcome message
-  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it as you move north, south, east, and west around the castle to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n>_`;
+  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it as you move north, south, east, and west around the castle and interact with enchanted objects to defeat Voldemort once and for all! If you wish to leave, simple ask to "exit". Are you ready to defeat Voldemort?\n>_`;
 
   //displays welcome message and asks if the user is ready to play
   let answer = await ask(welcomeMessage);
@@ -530,6 +530,15 @@ async function start() {
 
     //sanitize answer
     answer = answer.toLowerCase().trim();
+
+    //check if the player input is "exit" - if so, end the game
+    if (answer === "exit") {
+      console.log(
+        '"Hogwarts will always be there to welcome you home"\n\t-J.K.Rowling'
+      );
+      console.log("Goodbye");
+      process.exit();
+    }
 
     //breaks the answer into action and item (noun)
     let answerArr = splitAnswer(answer);
@@ -580,8 +589,7 @@ async function start() {
     //if answerAction and answerItem are not both defined
     else console.log(`Sorry, I don't know how to ${answer}.`);
   }
-  console.log("Goodbye!");
-  process.exit();
 }
 
+//play game
 start();
