@@ -426,7 +426,7 @@ let listOfActions = {
   examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
   greet: ["greet", "address", "meet"],
-  unlock: ["open open open"]
+  unlock: ["open open open", "openopenopen"]
 };
 
 //function to check player inventory
