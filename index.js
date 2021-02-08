@@ -52,11 +52,6 @@ class checkInventory {
     if (this.takeable) {
       //adds item to players inventory
       player.inventory.push(this.name);
-      //removes item from current room
-      // player.currentRoom.itemsInRoom.splice(
-      //   player.currentRoom.itemsInRoom.indexOf(this.name),
-      //   1
-      // );
       return (
         "You have picked up the " +
         this.name +
@@ -98,7 +93,7 @@ let portrait = new checkInventory(
 let scroll = new checkInventory(
   "scroll",
   "A scroll reads 'A brief history of the Room of Requirement'",
-  "The room of requirement is reserved for those who are truly in need. In order to gain access, you must say 'I am in great need.' thrice",
+  `The room of requirement is reserved for those who are truly in need. In order to gain access, you need to walk by the room three times in great need, or say "open open open" with the direction which you are facing`,
   "You probably should not greet inanimate objects.",
   false
 );
@@ -232,6 +227,7 @@ let itemKey = {
   east: "east",
   west: "west",
   around: "around",
+  room: "roomOfRequirement",
 };
 
 //------------------------------Rooms------------------------------//
@@ -414,7 +410,7 @@ let roomKey = {
 //action key - given a string input maps to the corresponding action
 let listOfActions = {
   move: ["move", "travel", "go", "walk"],
-  look: ["look", "scan", "survey", "view"],
+  look: ["look", "scan", "survey", "view","la"],
   check: ["check"],
   take: ["take", "steal", "remove", "extract", "accio", "confiscate", "pick"],
   drop: [
@@ -430,6 +426,7 @@ let listOfActions = {
   examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
   greet: ["greet", "address", "meet"],
+  unlock: ["open open open"]
 };
 
 //function to check player inventory
@@ -475,12 +472,6 @@ function splitAnswer(answer) {
 }
 
 //confirms if the item being called upon is in the room the users is currently in
-function checkRoom(item, currentRoom) {
-  return items[mapOfItems[item]].currentRoom === currentRoom;
-}
-
-//confirms if the item being called upon is in the room the users is currently in
-//remove if not used
 function checkWin() {
   if (
     player.currentRoom === "chamberOfSecrets" &&
@@ -503,34 +494,6 @@ function checkLose(answer) {
     process.exit();
   }
 }
-
-// //checks the requirements for access for the locked rooms in the game
-// async function checkForAccess(room) {
-//   switch (room) {
-//     case "chamberOfSecrets":
-//       if (player.inventory.includes("Treacle Tart")) {
-//         roomKey[room].isUnlocked = true;
-//         break;
-//       } else {
-//         console.log("This room is locked!");
-//         break;
-//       }
-//     case "roomOfRequirement":
-//       console.log("you are trying to access the room of requirement");
-//       let password = await ask(
-//         "To enter this room you must say the magic words. If you know them please enter them now: "
-//       );
-//       if (password === "open.") {
-//         console.log("you've opened the room of requirement");
-//         roomKey[room].isUnlocked = true;
-//         roomOfRequirement.enter();
-//         break;
-//       } else {
-//         console.log("This room is locked!");
-//         break;
-//       }
-//   }
-// }
 
 //------------------------------Play game------------------------------//
 async function start() {
@@ -582,12 +545,14 @@ async function start() {
           // let directionArray = ["north", "east", "south", "west"];
           player.currentRoom.move(answerItem);
           break;
-        //if unlock is triggered, we want to change the current room to whichever room belongs to the desired direction key, then use our move function to move into the room
+        //unlock is triggered to open the roomOfRequirement, we want to change the current room to whichever room belongs to the desired direction key, then use our move function to move into the room
         case "unlock":
           currentRoom = player.currentRoom;
-          let newRoom = roomKey[currentRoom[answerItem]];
-          newRoom.isUnlocked = true;
-          player.currentRoom.move(answerItem);
+          //since answer item is direction, currentRoom[answerItem] is identify what room you're moving too: in this case it's the roomOfRequirement
+          let newRoom = roomKey[(currentRoom[answerItem])]
+          //keeps new room unlocked
+          newRoom.isUnlocked = true
+          player.currentRoom.move(answerItem)
           break;
         //if answerAction is look - trigger lookAround method
         case "look":
