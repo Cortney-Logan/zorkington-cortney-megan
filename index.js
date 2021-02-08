@@ -57,33 +57,17 @@ class Room {
       //if a new room is locked, checks unlock conditions for access
       if (!newRoom.isUnlocked) {
         //check if unlock conditions are met for the currently locked room
-        switch (newRoom) {
-          case "chamberOfSecrets":
-            if (player.inventory.includes("Treacle Tart")) {
-              roomKey[newRoom].isUnlocked = true;
-              break;
-            } else {
-              console.log("This room is locked!");
-              break;
+        if (newRoom == chamberOfSecrets && player.inventory.includes("Treacle Tart")) {
+              newRoom.isUnlocked = true;
+              this.move(answerItem)
+        } else {
+            console.log("This room is locked! What is the password?")
             }
-          case "roomOfRequirement":
-            console.log("you are trying to access the room of requirement");
-              let password = await ask(
-                "To enter this room you must say the magic words. If you know them please enter them now: "
-              );
-              if (password === "open.") {
-                console.log("you've opened the room of requirement");
-                roomKey[newRoom].isUnlocked = true;
-                roomOfRequirement.enter();
-                break;
-              } else {
-                console.log("This room is locked!");
-                break;
-              }
-        }
-      }
+          }
+      
+      
       //checks if the new room is locked by accessing the isUnlocked property of the new room
-      if (newRoom.isUnlocked) {
+      else if (newRoom.isUnlocked) {
         //if the room is unlocked, enter the new room and change the player's current room property to the new room
         player.currentRoom = roomKey[this[direction]];
         player.currentRoom.enter();
@@ -95,10 +79,10 @@ class Room {
         "You've encountered Filch who carries deep disdain in his heart for wandering students. You can't go this way!"
       );
     }
-  }
+    }
+  
 
   //look around the room and see the room's inventory: 
-  
  lookAround() {
    let currentItems = player.currentRoom.itemsInRoom;
    console.log("You look around and you see the following items:")
@@ -258,7 +242,7 @@ let portrait = new checkInventory (
 let scroll = new checkInventory(
   "scroll",
   "A scroll reads 'A brief history of the Room of Requirement",
-  "The room of requirement is reserved for those who are truly in need. In order to gain access, you must say 'I am in great need.' thrice",
+  `The room of requirement is reserved for those who are truly in need. In order to gain access, you need to walk by the room three times in great need, or say "openpleasethrice" with the direction which you are facing`,
   "You probably should not green inanimate objects.",
   false
 );
@@ -319,6 +303,8 @@ let itemKey = {
   inventory: player.inventory,
   north: "north",
   south: "south",
+  south: "Alohomora",
+  "Alohomora": "south", 
   east: "east",
   west: "west",
   around: "around",
@@ -335,6 +321,7 @@ let listOfActions = {
   examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
   greet: ["greet", "address", "meet", ],
+  unlock: ["openpleasethrice"]
 };
 
 //function to check player inventory
@@ -470,12 +457,18 @@ async function start() {
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
     directionArray = ["north", "east", "south", "west"];
 
-    console.log("right before if statement");
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
           player.currentRoom.move(answerItem);
           break;
+          //if unlock is triggered, we want to change the current room to whichever room belongs to the desired direction key, then use our move function to move into the room 
+        case "unlock":
+          currentRoom = player.currentRoom;
+          let newRoom = roomKey[(currentRoom[answerItem])]
+          newRoom.isUnlocked = true
+          player.currentRoom.move(answerItem)
+          break; 
         case "look":
           player.currentRoom.lookAround();
           break;
@@ -488,6 +481,7 @@ async function start() {
           break;
         case "examine":
           console.log(itemKey[answerItem].examine());
+          console.log(typeof(itemKey[answerItem]))
           break;
         case "read":
           console.log(itemKey[answerItem].read());
