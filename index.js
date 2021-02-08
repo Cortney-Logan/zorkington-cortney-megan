@@ -307,12 +307,9 @@ class Room {
   //drop from room
   drop(answerItem,take)
   {
-    console.log(`before drop: ${player.currentRoom.itemsInRoom}`)
-    console.log(`take is ${take} and answerItem is ${answerItem.name}`)
     if(take){
       //added .name
-    player.currentRoom.itemsInRoom.splice(player.currentRoom.itemsInRoom.indexOf(answerItem.name),1)
-    console.log(`after drop: ${player.currentRoom.itemsInRoom}`)}
+    player.currentRoom.itemsInRoom.splice(player.currentRoom.itemsInRoom.indexOf(answerItem.name),1)}
     else return;
   }
 
@@ -474,7 +471,7 @@ function splitAnswer(answer) {
 //confirms if the item being called upon is in the room the users is currently in
 function checkWin() {
   if (
-    player.currentRoom === "chamberOfSecrets" &&
+    player.currentRoom === roomKey["chamberOfSecrets"] &&
     player.inventory.includes(diary.name)
   ) {
     console.log("you have the diary");
