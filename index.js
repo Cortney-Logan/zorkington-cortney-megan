@@ -15,13 +15,16 @@ function ask(questionText) {
 //-------Player-----//
 //defines an object to hold information about the player
 let player = {
-  name: "Player1",
   inventory: [],
   currentRoom: "",
 };
 
-//--------------------Rooms------------------------------//
-
+//------------------------------Rooms------------------------------//
+//defines a class of Rooms - constructors include
+// - isUnlocked (boolean)
+// - roomDescription (printed when room is entered)
+// - itemsInRoom (room inventory)
+// - north/south/east/west (what rooms lie in each direction - false indicates that there is no room in that direction)
 class Room {
   constructor(
     isUnlocked,
@@ -88,6 +91,16 @@ class Room {
    console.log("You look around and you see the following items:")
    for (let item of currentItems) console.log(item);
 }
+
+drop(answerItem,take)
+{
+  if(take){
+  player.currentRoom.itemsInRoom.splice(player.currentRoom.itemsInRoom.indexOf(answerItem),1)}
+  else return;
+}
+
+
+
 }
 // list of all of our rooms:
 let greatHall = new Room(
@@ -138,7 +151,7 @@ Several rows of desks line the classroom, the professor’s desk is cluttered wi
 
 let chamberOfSecrets = new Room(
   false,
-  ` Enemies of the Heir, beware! The Chamber of Secrets has been opened! You are standing in a large pipe at the entrance to the Chamber. In front of you is the decaying skeleton of the Basilisk.  Near its giant head you see a glimmer of light.`,
+  `Enemies of the Heir, beware! The Chamber of Secrets has been opened! You are standing in a large pipe at the entrance to the Chamber. In front of you is the decaying skeleton of the Basilisk.  Near its giant head you see a glimmer of light.`,
   ["mirror", "House Cup"],
   "greatHall",
   "roomOfRequirement",
@@ -218,8 +231,7 @@ class checkInventory {
   
       player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
         console.log("you have " + player.inventory +"left in your inventory");
-        //console.log(`still here 1`);
-        return;
+        
       }
  
   
@@ -316,7 +328,7 @@ let listOfActions = {
   move: ["move","travel","go", "walk"],
   look: ["look", "scan", "survey", "view"],
   check: ["check"],
-  take: ["take", "steal", "remove", "extract", "accio", "confiscate"],
+  take: ["take", "steal", "remove", "extract", "accio", "confiscate","pick"],
   drop: ["drop", "abandon", "depulso", "let go of", "release", "reliquish", "set down", "leave"],
   examine: ["examine", "look at", "inspect", "aparecium"],
   read: ["read"],
@@ -335,31 +347,6 @@ function checkPlayerInventory() {
     console.log(`You have nothing in your inventory.`);
   }
 }
-
-//drop function
-//would like to drop an item
-// yes
-//which item
-//1=diary, 2= scroll.....
-//player inputs a number of the item to be dropped
-
- /*function drop(answerItem) {
-  
-player.inventory.splice(indexOf(answerItem), 1); // index,how many item to be removed
-  console.log("you have " + player.inventory);
-  //console.log(`still here 1`);
-  return;
-}*/
-
-//drops inventory based on input
-function dropInventory(item) {
-  let index = player.inventory.indexOf(item);
-  console.log(index); //finds item in player.inventory
-  //removes from player.inventory
-  //adds item to currentRoom.itemsInRoom
-}
-
-//state machine //Megan made this as a statehold
 
 //----------------------------------------Functions-------------------------------//
 
@@ -394,6 +381,30 @@ function splitAnswer(answer) {
 //confirms if the item being called upon is in the room the users is currently in
 function checkRoom(item, currentRoom) {
   return items[mapOfItems[item]].currentRoom === currentRoom;
+}
+
+//checks the win conditions
+function checkWin() {
+  if (
+    player.currentRoom === "chamberOfSecrets" &&
+    player.inventory.includes("diary")
+  ) {
+    console.log("you have the diary");
+    if (
+      player.inventory.includes("sword") ||
+      player.inventory.includes("basiliskFang")
+    ) {
+      console.log("You win.");
+      process.exit();
+    }
+  }
+}
+
+//checks the lose conditions
+function checkLose(answer) {
+  if (answer[0] === "examine" && answer[1] === "cabinet") {
+    process.exit();
+  }
 }
 
 //checks the requirements for access for the locked rooms in the game
@@ -457,9 +468,12 @@ async function start() {
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
     directionArray = ["north", "east", "south", "west"];
 
+
     if (answerAction && answerItem) {
       switch (answerAction) {
         case "move":
+          //vet the direction against this array before entering move case
+          // let directionArray = ["north", "east", "south", "west"];
           player.currentRoom.move(answerItem);
           break;
           //if unlock is triggered, we want to change the current room to whichever room belongs to the desired direction key, then use our move function to move into the room 
@@ -474,6 +488,7 @@ async function start() {
           break;
         case "drop":
           console.log(itemKey[answerItem].drop());
+          player.currentRoom.itemsInRoom.push((itemKey[answerItem].name))
           break;
         //add item to current room
         case "check":
@@ -489,12 +504,19 @@ async function start() {
         case "greet":
           console.log(itemKey[answerItem].greet());
           break;
-        case "take":
-          console.log(itemKey[answerItem].take());
+          case "take":
+            console.log(itemKey[answerItem].take());
+            player.currentRoom.drop(itemKey[answerItem],itemKey[answerItem].takeable)
+           // player.currentRoom.itemsInRoom.splice(player.currentRoom.itemsInRoom.indexOf(itemKey[answerItem]),1)
           //NEED(?): removes item from room
           break;
       }
-    } else console.log(`Sorry, I don't know how to ${answer}.`);
+      // //check win and lose conditions
+      checkWin();
+      checkLose(answerArr);
+    }
+    //if answerAction and answerItem are not both defined
+    else console.log(`Sorry, I don't know how to ${answer}.`);
   }
   console.log("Goodbye!");
   process.exit();
