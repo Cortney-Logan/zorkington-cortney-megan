@@ -17,7 +17,6 @@ function ask(questionText) {
 //------------------------------Player------------------------------//
 //defines an object to hold information about the player
 let player = {
-  name: "Player1",
   inventory: [],
   currentRoom: "",
 };
@@ -26,7 +25,7 @@ let player = {
 //defines a class of Rooms - constructors include
 // - isUnlocked (boolean)
 // - roomDescription (printed when room is entered)
-// -itemsinRoom (room inventory)
+// - itemsInRoom (room inventory)
 // - north/south/east/west (what rooms lie in each direction - false indicates that there is no room in that direction)
 class Room {
   constructor(
@@ -163,7 +162,7 @@ Several rows of desks line the classroom, the professor’s desk is cluttered wi
 
 let chamberOfSecrets = new Room(
   false,
-  ` Enemies of the Heir, beware! The Chamber of Secrets has been opened! You are standing in a large pipe at the entrance to the Chamber. In front of you is the decaying skeleton of the Basilisk.  Near its giant head you see a glimmer of light.`,
+  `Enemies of the Heir, beware! The Chamber of Secrets has been opened! You are standing in a large pipe at the entrance to the Chamber. In front of you is the decaying skeleton of the Basilisk.  Near its giant head you see a glimmer of light.`,
   ["mirror", "House Cup"],
   "greatHall",
   "roomOfRequirement",
@@ -475,6 +474,30 @@ function checkRoom(item, currentRoom) {
   return items[mapOfItems[item]].currentRoom === currentRoom;
 }
 
+//checks the win conditions
+function checkWin() {
+  if (
+    player.currentRoom === "chamberOfSecrets" &&
+    player.inventory.includes("diary")
+  ) {
+    console.log("you have the diary");
+    if (
+      player.inventory.includes("sword") ||
+      player.inventory.includes("basiliskFang")
+    ) {
+      console.log("You win.");
+      process.exit();
+    }
+  }
+}
+
+//checks the lose conditions
+function checkLose(answer) {
+  if (answer[0] === "examine" && answer[1] === "cabinet") {
+    process.exit();
+  }
+}
+
 //checks the requirements for access for the locked rooms in the game
 async function checkForAccess(room) {
   switch (room) {
@@ -553,7 +576,7 @@ async function start() {
       switch (answerAction) {
         case "move":
           //vet the direction against this array before entering move case
-          let directionArray = ["north", "east", "south", "west"];
+          // let directionArray = ["north", "east", "south", "west"];
           player.currentRoom.move(answerItem);
           break;
         //if answerAction is look - trigger lookAround method
@@ -585,6 +608,9 @@ async function start() {
           console.log(itemKey[answerItem].take());
           break;
       }
+      // //check win and lose conditions
+      checkWin();
+      checkLose(answerArr);
     }
     //if answerAction and answerItem are not both defined
     else console.log(`Sorry, I don't know how to ${answer}.`);
