@@ -232,9 +232,16 @@ class checkInventory {
     }
   }
 
-  drop() {
-    return this.name;
-  }
+
+    drop() {
+  
+      player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
+        console.log("you have " + player.inventory +"left in your inventory");
+        //console.log(`still here 1`);
+        return;
+      }
+ 
+  
 }
 
 let diary = new checkInventory(
@@ -421,19 +428,13 @@ function checkPlayerInventory() {
 //1=diary, 2= scroll.....
 //player inputs a number of the item to be dropped
 
-async function drop() {
-  console.log("which item would you like to drop?");
-
-  for (let i = 0; i < player.inventory.length; i++) {
-    console.log(i + "-" + player.inventory[i]);
-  }
-  userInp = await ask("please input the item number to be removed: ");
-
-  player.inventory.splice(parseInt(userInp), 1); // index,how many item to be removed
+ /*function drop(answerItem) {
+  
+player.inventory.splice(indexOf(answerItem), 1); // index,how many item to be removed
   console.log("you have " + player.inventory);
-  console.log(`still here 1`);
+  //console.log(`still here 1`);
   return;
-}
+}*/
 
 //drops inventory based on input
 function dropInventory(item) {
@@ -552,8 +553,7 @@ async function start() {
           player.currentRoom.lookAround();
           break;
         case "drop":
-          console.log("dropping!");
-          drop();
+          console.log(itemKey[answerItem].drop());
           break;
         //add item to current room
         case "check":
