@@ -1,3 +1,4 @@
+//Boilerplate code set up correctly - used to accept input from user
 const { ENETRESET } = require("constants");
 const { read } = require("fs");
 const { exit } = require("process");
@@ -12,7 +13,8 @@ function ask(questionText) {
     readlineInterface.question(questionText, resolve);
   });
 }
-//-------Player-----//
+
+//------------------------------Player------------------------------//
 //defines an object to hold information about the player
 let player = {
   name: "Player1",
@@ -20,8 +22,12 @@ let player = {
   currentRoom: "",
 };
 
-//--------------------Rooms------------------------------//
-
+//------------------------------Rooms------------------------------//
+//defines a class of Rooms - constructors include
+// - isUnlocked (boolean)
+// - roomDescription (printed when room is entered)
+// -itemsinRoom (room inventory)
+// - north/south/east/west (what rooms lie in each direction - false indicates that there is no room in that direction)
 class Room {
   constructor(
     isUnlocked,
@@ -97,15 +103,15 @@ class Room {
     }
   }
 
-  //look around the room and see the room's inventory:
-
+  //look around the room and see the room's inventory
   lookAround() {
     let currentItems = player.currentRoom.itemsInRoom;
     console.log("You look around and you see the following items:");
     for (let item of currentItems) console.log(item);
   }
 }
-// list of all of our rooms:
+
+//declares each of the rooms
 let greatHall = new Room(
   true,
   "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see Professor McGonagall with the sorting hat. If you look around you'll see many things! What would you like to do?",
@@ -175,7 +181,7 @@ let roomOfRequirement = new Room(
   "chamberOfSecrets"
 );
 
-//room key
+//room key - given a string input maps to the corresponding room object
 let roomKey = {
   gryffindorCommon: gryffindorCommon,
   "gryffindor common room": gryffindorCommon,
@@ -199,28 +205,34 @@ let roomKey = {
   "room of requirement": roomOfRequirement,
 };
 
-//directionkey
-
-//---------------------------Items----------------------------//
+//------------------------------Items------------------------------//
+//defines a class of items - constructors include
+// - name (full name of the item)
+// - descriptionTxt (text about the object when the player interacts with it)
+// - readTxt (text about the object when the player reads it)
+// - greetTxt (text about the object when the player greets it)
+// - takeable (boolean indicating if the object is takable or not)
 class checkInventory {
   constructor(name, descriptionTxt, readTxt, greetTxt, takeable) {
-    this.name = name; // name of the object
-    this.descriptionTxt = descriptionTxt; // text about the object when player grabs it
-    this.readTxt = readTxt; // text about the object when the player reads it
-    this.greetTxt = greetTxt; // text about the object when the player greets it
+    this.name = name;
+    this.descriptionTxt = descriptionTxt;
+    this.readTxt = readTxt;
+    this.greetTxt = greetTxt;
     this.takeable = takeable;
   }
+  //examine method returns the item description when it is called
   examine() {
     return this.descriptionTxt;
   }
+  //read method returns the item's readTxt when it is called
   read() {
     return this.readTxt;
   }
-
+  //greet method returns the item's greetTxt when it is called
   greet() {
     return this.greetTxt;
   }
-
+  //take method checks if the item is takeable and adds it to player's inventory if it is
   take() {
     if (this.takeable) {
       player.inventory.push(this.name);
@@ -231,19 +243,15 @@ class checkInventory {
       return "You can't take the " + this.name;
     }
   }
-
-
-    drop() {
-  
-      player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
-        console.log("you have " + player.inventory +"left in your inventory");
-        //console.log(`still here 1`);
-        return;
-      }
- 
-  
+  //drop method drops the item from player's inventory when it is called
+  drop() {
+    player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
+    console.log("you have " + player.inventory + "left in your inventory");
+    return;
+  }
 }
 
+//declares each of the rooms
 let diary = new checkInventory(
   "diary",
   "When Tom Marvolo Riddle was in his fifth year at Hogwarts, he achieved his goal of locating Salazar Slytherin's Chamber of Secrets and used his ability to speak Parseltongue to open it. He further used this language ability to order the Chamber's Basilisk to terrorize the school and hunt down the Muggle-born students. Eventually one of the Muggle-borns, a Ravenclaw girl named Myrtle Warren, was killed. Riddle would later use this murder to infuse the journal with a piece of his soul, and transformed it into his first Horcrux.",
@@ -258,7 +266,7 @@ let portrait = new checkInventory(
   "As a reminder, witches and wizards, the only way to fully extinguish a horcrux is to use basilisk venom or an object imbued with basilisk venom.",
   false
 );
-//should this be the "libraryScroll"
+
 let scroll = new checkInventory(
   "scroll",
   "A scroll reads 'A brief history of the Room of Requirement'",
@@ -266,6 +274,7 @@ let scroll = new checkInventory(
   "You probably should not greet inanimate objects.",
   false
 );
+
 let cloak = new checkInventory(
   "Invisibility Cloak",
   `Aparecium! You reveal that the glimmering fabric is in fact the famous invisibility cloak! The cloak has been described as one which "endures eternally, giving constant and impenetrable concealment, no matter what spells are cast at it." According to the legend, Ignotus Peverell was given the cloak by Death in the 13th century as a reward for having bested him. Whether the legend is true or not, the cloak became a family heirloom and was inherited by Ignotus' descendents, including James Potter and eventually his son, Harry Potter who was given it as a gift on Christmas day 1991.`,
@@ -273,6 +282,7 @@ let cloak = new checkInventory(
   "Hello cloak, hello player.",
   true
 );
+
 let treacleTart = new checkInventory(
   "Treacle Tart",
   "Hogwart's treacle tarts are made to perfection with a flakey pastry and golden syrup; and of course no soggy bottoms.",
@@ -280,13 +290,15 @@ let treacleTart = new checkInventory(
   "Not everything in Hogwarts is living...you can't greet a treacle tart.",
   true
 );
+
 let sortingHat = new checkInventory(
   "Sorting Hat",
-  "\"Oh you may not think I'm pretty, but don't judge on what you see, I'll eat myself if you can find a smarter hat than me.\"",
-  "You cannot read the Sorting Hat",
-  "You can keep your bowlers black,\nYour top hats sleek and tall,\nFor I'm the Hogwarts Sorting Hat\nAnd I can cap them all.\nI have a clue for you - the answer to the castle lies in the Secret Chamber south of this Great Hall. To enter you must possess that which will make you invisible to those around you.",
+  "\"Oh you may not think I'm pretty,\nbut don't judge on what you see,\nI'll eat myself if you can find a smarter hat than me.\"",
+  "You cannot read the Sorting Hat.",
+  '"You can keep your bowlers black,\nYour top hats sleek and tall,\nFor I\'m the Hogwarts Sorting Hat\nAnd I can cap them all."\nI have a clue for you - the answer to the castle lies in the Secret Chamber south of this Great Hall. To enter you must possess that which will make you invisible to those around you.',
   false
 );
+
 let potionBook = new checkInventory(
   "Advanced Potion-Making",
   "This Book is the Property of the Half-Blood Prince",
@@ -294,6 +306,7 @@ let potionBook = new checkInventory(
   "Everything this book has to say are contained within its pages.",
   true
 );
+
 let chalkBoard = new checkInventory(
   "chalk board",
   "The chalk board contains notes about Vanishing Cabinets.",
@@ -306,7 +319,7 @@ let cup = new checkInventory(
   "House Cup",
   "Lucky for you the Basilisk has been dead for years - the glimmer appears to be a brilliant cup.  It appears to be the infamous House Cup! Maybe your house will win this year...",
   "",
-  "",
+  "The House Cup does not have anything to say.",
   true
 );
 
@@ -326,7 +339,13 @@ let cabinet = new checkInventory(
   false
 );
 
-let basiliskFang = new checkInventory("Basilisk Fang", "", "", "", true);
+let basiliskFang = new checkInventory(
+  "Basilisk Fang",
+  "The Basilisk, also known as the King of Serpents, is a deadly beast who can kill someone with a single look directly into its piercing eyes. Its venom has only one known antidote: the tears of a phoenix.",
+  "There is nothing to read on the Basilisk Fang.",
+  "Better you than me - I would have no interest in greeting a Basilisk Fang!",
+  true
+);
 
 let sword = new checkInventory(
   "Sword of Gryffindor",
@@ -336,7 +355,7 @@ let sword = new checkInventory(
   true
 );
 
-//items key
+//item key - given a string input maps to the corresponding item object
 let itemKey = {
   treacletart: treacleTart,
   "treacle tart": treacleTart,
@@ -387,8 +406,8 @@ let itemKey = {
   around: "around",
 };
 
-//--------------------------------------------Actions---------------------------------------//
-//action key
+//------------------------------Actions------------------------------//
+//action key - given a string input maps to the corresponding action
 let listOfActions = {
   move: ["move", "travel", "go", "walk"],
   look: ["look", "scan", "survey", "view"],
@@ -421,33 +440,7 @@ function checkPlayerInventory() {
   }
 }
 
-//drop function
-//would like to drop an item
-// yes
-//which item
-//1=diary, 2= scroll.....
-//player inputs a number of the item to be dropped
-
- /*function drop(answerItem) {
-  
-player.inventory.splice(indexOf(answerItem), 1); // index,how many item to be removed
-  console.log("you have " + player.inventory);
-  //console.log(`still here 1`);
-  return;
-}*/
-
-//drops inventory based on input
-function dropInventory(item) {
-  let index = player.inventory.indexOf(item);
-  console.log(index); //finds item in player.inventory
-  //removes from player.inventory
-  //adds item to currentRoom.itemsInRoom
-}
-
-//state machine //Megan made this as a statehold
-
-//----------------------------------------Functions-------------------------------//
-
+//------------------------------Functions------------------------------//
 //function to turn answer into array to isolate verb and noun
 function splitAnswer(answer) {
   //declares answerArr variable as an array to hold the answer action and answer verb
@@ -477,6 +470,7 @@ function splitAnswer(answer) {
 }
 
 //confirms if the item being called upon is in the room the users is currently in
+//remove if not used
 function checkRoom(item, currentRoom) {
   return items[mapOfItems[item]].currentRoom === currentRoom;
 }
@@ -509,72 +503,85 @@ async function checkForAccess(room) {
   }
 }
 
-//----------------------Play game-------------------------------------------------//
-start();
+//------------------------------Play game------------------------------//
 async function start() {
-  //declares variable to store current room
+  //welcome message
   const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it as you move north, south, east, and west around the castle to defeat Voldemort once and for all! Are you ready to defeat Voldemort?\n>_`;
+
+  //displays welcome message and asks if the user is ready to play
   let answer = await ask(welcomeMessage);
+
+  //continues to ask for user to confirm they are ready to play until the enter "yes"
   while (answer.toLowerCase().trim() !== "yes") {
     answer = await ask('Say "yes" when you\'re ready to begin!\n>_');
   }
-  //core of game - expects user input to move through rooms and interact with items.  Will continue to loop until the user enters 'exit'
+
+  //Core of game - expects user input to move through rooms and interact with items.  Will continue to loop until the user enters 'exit'
   while (answer !== "exit") {
-    //the user has said yes - show them the room description for the first room
+    //the user has said yes - the user begins in the first room and is shown the room description
     if (answer.toLowerCase().trim().includes("yes")) {
+      //sets the currentRoom as the greatHall.  This is stored in the player object
       player.currentRoom = greatHall;
       greatHall.enter();
     }
 
     //prompts user for input
-
     answer = await ask(">_");
 
     //sanitize answer
     answer = answer.toLowerCase().trim();
 
-    //accepts answer and breaks out into action and noun
+    //breaks the answer into action and item (noun)
     let answerArr = splitAnswer(answer);
-    //declares variables to hold the answerAction and answerItem
+
+    //declares variables to hold the answerAction (action) and answerItem (noun)
     let answerAction = answerArr[0];
     let answerItem = answerArr[1];
 
-    //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid.
-
-    //vet the direction against this array before entering move case
-    let directionArray = ["north", "east", "south", "west"];
-
+    //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid
     if (answerAction && answerItem) {
+      //switch statement looks at answerAction and triggers the appropriate case based on input
       switch (answerAction) {
         case "move":
+          //vet the direction against this array before entering move case
+          let directionArray = ["north", "east", "south", "west"];
           player.currentRoom.move(answerItem);
           break;
+        //if answerAction is look - trigger lookAround method
         case "look":
           player.currentRoom.lookAround();
           break;
+        //if answerAction is drop - trigger drop method
         case "drop":
           console.log(itemKey[answerItem].drop());
           break;
-        //add item to current room
+        //if answerAction is check - trigger checkInventory
         case "check":
           checkPlayerInventory();
           break;
+        //if answerAction is examine - trigger examine method
         case "examine":
           console.log(itemKey[answerItem].examine());
           break;
+        //if answerAction is read - trigger read method
         case "read":
           console.log(itemKey[answerItem].read());
           break;
+        //if answerAction is greet - trigger greet method
         case "greet":
           console.log(itemKey[answerItem].greet());
           break;
+        //if answerAction is take - trigger take method
         case "take":
           console.log(itemKey[answerItem].take());
-          //NEED(?): removes item from room
           break;
       }
-    } else console.log(`Sorry, I don't know how to ${answer}.`);
+    }
+    //if answerAction and answerItem are not both defined
+    else console.log(`Sorry, I don't know how to ${answer}.`);
   }
   console.log("Goodbye!");
   process.exit();
 }
+
+start();
