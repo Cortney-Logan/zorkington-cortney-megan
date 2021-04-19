@@ -1,7 +1,7 @@
 //Boilerplate code set up correctly - used to accept input from user
-const { ENETRESET } = require("constants");
-const { read } = require("fs");
-const { exit } = require("process");
+// const { ENETRESET } = require("constants");
+// const { read } = require("fs");
+// const { exit } = require("process");
 const readline = require("readline");
 const readlineInterface = readline.createInterface(
   process.stdin,
@@ -20,6 +20,7 @@ let player = {
   name: "Player1",
   inventory: [],
   currentRoom: "",
+  house: "",
 };
 
 //------------------------------Items------------------------------//
@@ -49,13 +50,23 @@ class checkInventory {
   }
 
   putOn() {
+    // checks if the item being put on is the sorting hat
     if (this.name == "Sorting Hat") {
-      let houseArray = [
-        "Gryffindor!", "Slytherin!", "Hufflepuff!", "Ravenclaw"
-      ];
-      let chosenHouse = houseArray[Math.round(3*Math.random())];
-      console.log(
-      `Welcome, welcome, one and all
+      // if the player house is not yet set, the hat will randomly sort the user into a house
+      if (player.house === "") {
+        let houseArray = [
+          "Gryffindor!",
+          "Slytherin!",
+          "Hufflepuff!",
+          "Ravenclaw",
+        ];
+
+        // choses a random number between 0 and 3, which correspond to indices of houses in houseArra
+        let chosenHouse = houseArray[Math.round(3 * Math.random())];
+
+        // sorting hat's response with chosen house
+        console.log(
+          `Welcome, welcome, one and all
       the show is about to start
       I'm the Hogwarts Sorting Hat
       and it's time to play my part
@@ -70,38 +81,79 @@ class checkInventory {
 
       .....
 
-      ${chosenHouse}`)
-    } else if (this.name == "Invisibility Cloak" && player.inventory.includes("Invisibility Cloak")) {
-      console.log("You're invisible!")
-    } else 
-      console.log("You can't put that on!")
-    
+      ${chosenHouse}`
+        );
+
+        // sets the house in player object
+        player.house = chosenHouse;
+      }
+      // if the player has already been sorted the hat reminds them of their house
+      else console.log("You have already been sorted into", player.house);
+    }
+    // checks if the item being put on is the cloak
+    else if (this.name == "Invisibility Cloak") {
+      // if the cloak is in the player's inventory they can wear it
+      if (player.inventory.includes("Invisibility Cloak")) {
+        console.log("You're invisible!");
+      }
+      // the cloak must be in the player's inventory before they can wear it
+      else {
+        console.log(
+          "The cloak needs to be in your inventory before you can wear it."
+        );
+      }
+    }
+    // no other items can be worn
+    else console.log("You can't wear" + this.name + ".");
   }
 
   take() {
-    if (this.takeable) {
-      //adds item to players inventory array
-      player.inventory.push(this.name);
-      return (
-        "You have picked up the " +
-        this.name +
-        ". You currently have: " +
-        player.inventory.join(", ")
-      );
-    } else {
-      return "You can't take the " + this.name + ".";
+    //checks that the item requested is in the player's current room
+    if (player.currentRoom.itemsInRoom.includes(this.name)) {
+      //checks that the item is takable
+      if (this.takeable) {
+        // adds item to players inventory array
+        player.inventory.push(this.name);
+
+        // removes item from current room
+        player.currentRoom.itemsInRoom.splice(
+          player.currentRoom.itemsInRoom.indexOf(this.name),
+          1
+        );
+
+        // return message to player
+        return (
+          "You have picked up the " +
+          this.name +
+          ". You currently have: " +
+          player.inventory.join(", ")
+        );
+      }
+      // if item is not takable
+      else {
+        return "You can't take the " + this.name + ".";
+      }
+    }
+    // if the item is not in the same room returns that the item is not there
+    else {
+      return this.name + " is not here.";
     }
   }
 
   drop() {
     //removes item from player inventory
     player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
-    console.log(`You have dropped the ${this.name}`);
+    console.log(`You have dropped the ${this.name}.`);
+
+    // adds item to the current room
+    player.currentRoom.itemsInRoom.push(this.name);
+
+    // lets the player know what is left in their inventory
     if (player.inventory.length > 0) {
-      console.log(
+      return (
         "You have " + player.inventory.join(", ") + " left in your inventory."
       );
-    } else console.log("You have nothing in your inventory.");
+    } else return "You have nothing in your inventory.";
   }
 }
 
@@ -265,7 +317,7 @@ let itemKey = {
 //defines a class of Rooms - constructors include
 // - isUnlocked (boolean)
 // - roomDescription (printed when room is entered)
-// -itemsinRoom (room inventory)
+// - itemsinRoom (room inventory)
 // - north/south/east/west (what rooms lie in each direction - false indicates that there is no room in that direction)
 class Room {
   constructor(
@@ -339,10 +391,15 @@ class Room {
   drop(answerItem, take) {
     if (take) {
       //if the item is takeable - find the item in the currentRoom.itemsInRoom array and remove it
+      console.log("answerItem is", answerItem);
+      // console.log("player.currentRoom is", player.currentRoom)
+      console.log("items in room are is", player.currentRoom.itemsInRoom);
+      console.log(player.currentRoom.itemsInRoom.indexOf(answerItem.name));
       player.currentRoom.itemsInRoom.splice(
         player.currentRoom.itemsInRoom.indexOf(answerItem.name),
         1
       );
+      console.log("items in room are is", player.currentRoom.itemsInRoom);
     } else return;
   }
 }
@@ -439,7 +496,7 @@ let roomKey = {
 //action key - given a string input maps to the corresponding action
 let listOfActions = {
   move: ["move", "travel", "go", "walk"],
-  look: ["look", "scan", "survey", "view", "la"],
+  look: ["look", "scan", "survey", "view"],
   check: ["check"],
   take: ["take", "steal", "remove", "extract", "accio", "confiscate", "pick"],
   drop: [
@@ -456,7 +513,7 @@ let listOfActions = {
   read: ["read"],
   greet: ["greet", "address", "talk to", "say hi", "meet"],
   unlock: ["open open open", "openopenopen"],
-  putOn: ["put on"]
+  putOn: ["put on", "wear"],
 };
 
 //function to check player inventory
@@ -513,7 +570,7 @@ function checkWin() {
       player.inventory.includes(basiliskFang.name)
     ) {
       console.log(
-        "You are in the Chamber of Secrets.  Tom Riddle's Diary does not stand a chance now that you have the proper tools to destroy it.  As the last horcrux to destroy you have now completed your quest to vanquish Lord Voldemort once and for all.  You are indeed The Chose One.\nCongratulations. You Win!"
+        "You are in the Chamber of Secrets. Tom Riddle's Diary does not stand a chance now that you have the proper tools to destroy it. As the last horcrux to destroy you have now completed your quest to vanquish Lord Voldemort once and for all.  You are indeed The Chose One.\nCongratulations. You Win!"
       );
       process.exit();
     }
@@ -530,7 +587,7 @@ function checkLose(answer) {
 //------------------------------Play game------------------------------//
 async function start() {
   //welcome message
-  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it as you move north, south, east, and west around the castle and interact with enchanted objects to defeat Voldemort once and for all! If you wish to leave, simple ask to "exit". Are you ready to defeat Voldemort?\n>_`;
+  const welcomeMessage = `Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are tasked with a very important mission: find the remaining horcrux and destroy it as you move north, south, east, and west around the castle and interact with enchanted objects to defeat Voldemort once and for all! If you wish to leave, simply ask to "exit". Are you ready to defeat Voldemort?\n>_`;
 
   //displays welcome message and asks if the user is ready to play
   let answer = await ask(welcomeMessage);
@@ -567,6 +624,8 @@ async function start() {
     //declares variables to hold the answerAction (action) and answerItem (noun)
     let answerAction = answerArr[0];
     let answerItem = answerArr[1];
+    // console.log("answer action is", answerAction);
+    // console.log("answer item is", answerItem);
 
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid
     if (answerAction && answerItem) {
@@ -595,7 +654,7 @@ async function start() {
           //calls the drop method on the item class
           console.log(itemKey[answerItem].drop());
           //adds the dropped item to the current room's inventory
-          player.currentRoom.itemsInRoom.push(itemKey[answerItem].name);
+          // player.currentRoom.itemsInRoom.push(itemKey[answerItem].name);
           break;
         //if answerAction is check - trigger checkInventory
         case "check":
@@ -616,15 +675,14 @@ async function start() {
         //if answerAction is take - trigger take method
         case "putOn":
           itemKey[answerItem].putOn();
-          break 
+          break;
         case "take":
-          //check item is in the current room
-          console.log(itemKey[answerItem].take());
-          //calls drop method on rooms to remove item from room
-          player.currentRoom.drop(
-            itemKey[answerItem],
-            itemKey[answerItem].takeable
-          );
+          if (answerItem === "inventory") {
+            checkPlayerInventory();
+          } else {
+            // adds item to inventory if item is takeable and in the current room
+            console.log(itemKey[answerItem].take());
+          }
           break;
       }
       // //check win and lose conditions
