@@ -14,6 +14,8 @@ function ask(questionText) {
   });
 }
 
+const wrap = require("word-wrap");
+
 //------------------------------Player------------------------------//
 //defines an object to hold information about the player
 let player = {
