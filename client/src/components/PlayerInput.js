@@ -30,7 +30,9 @@ function PlayerInput(props) {
   // handles changing input
   function handleChange(evt) {
       setAnswer(evt.target.value)
+      console.log("answer set")
   }
+  
   //function to turn answer into array to isolate verb and noun
   function splitAnswer(evt) {
     evt.preventDefault();
@@ -58,14 +60,17 @@ function PlayerInput(props) {
       });
     });
 
-    // sets next move in state
-    props.setAnswerAction(answerArr[0]);
-    props.setAnswerItem(answerArr[1]);
+    props.playerMove(answerArr[0],answerArr[1])
+    // // sets next move in state
+    // props.setAnswerAction(answerArr[0]);
+    // console.log("answeraction set")
+    // props.setAnswerItem(answerArr[1]);
+    // console.log("answeritem set")
   }
 
   return (
     <div id="player-input">
-      <button class="button" onClick={props.setGame}>Enter</button>
+      <button class="button" onClick={props.startGame}>Enter</button>
       <form onSubmit={splitAnswer}>
         <input
           type="text"

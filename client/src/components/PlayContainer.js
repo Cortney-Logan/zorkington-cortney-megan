@@ -9,6 +9,7 @@ function PlayContainer(props) {
         setPlayer={props.setPlayer}
         itemKey={props.itemKey}
         description={props.description}
+        details={props.details}
       />
       <PlayerInput
         player={props.player}
@@ -18,7 +19,8 @@ function PlayContainer(props) {
         setAnswerItem={props.setAnswerItem}
         answerAction={props.answerAction}
         setAnswerAction={props.setAnswerAction}
-        setGame={props.setGame}
+        startGame={props.startGame}
+        playerMove={props.playerMove}
       />
     </div>
   );
