@@ -1,17 +1,9 @@
 import "./App.css";
 import Header from "./components/Header.js";
 import PlayContainer from "./components/PlayContainer.js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function App() {
-
-    // player
-    const [player, setPlayer] = useState({
-      name: "Player1",
-      inventory: [],
-      currentRoom: "",
-      house: "",
-    });
   //------------------------------Items------------------------------//
   //defines a class of items - constructors include
   // - name (full name of the item)
@@ -38,15 +30,16 @@ function App() {
       setDetails(this.greetTxt);
     }
 
-    putOn() {
+    putOn(player) {
       // checks if the item being put on is the sorting hat
       if (this.name === "Sorting Hat") {
         // if the player house is not yet set, the hat will randomly sort the user into a house
+        console.log("inside put on function player is", player);
         if (player.house === "") {
           let houseArray = [
-            "Gryffindor!",
-            "Slytherin!",
-            "Hufflepuff!",
+            "Gryffindor",
+            "Slytherin",
+            "Hufflepuff",
             "Ravenclaw",
           ];
 
@@ -70,14 +63,16 @@ function App() {
   
         .....
   
-        ${chosenHouse}`
+        ${chosenHouse}!`
           );
 
           // sets the house in player object
-          setPlayer({ ...player, house: chosenHouse });
+          player.house = chosenHouse;
         }
         // if the player has already been sorted the hat reminds them of their house
-        else setDetails("You have already been sorted into", player.house);
+        else {
+          setDetails(`You have already been sorted into ${player.house}.`);
+        }
       }
       // checks if the item being put on is the cloak
       else if (this.name === "Invisibility Cloak") {
@@ -96,16 +91,14 @@ function App() {
       else setDetails("You can't wear the " + this.name + ".");
     }
 
-    take(itemsInRoom) {
-      console.log("take is triggered")
+    take(player) {
       //checks that the item requested is in the player's current room
-      console.log("player.currentRoom.itemsInRoom", player)
-      if (itemsInRoom.includes(this.name)) {
+      if (player.currentRoom.itemsInRoom.includes(this.name)) {
         //checks that the item is takable
         if (this.takeable) {
-          console.log("player.inventory", player.inventory)
           // adds item to players inventory array
           player.inventory.push(this.name);
+          setPlayer(player);
 
           // removes item from current room
           player.currentRoom.itemsInRoom.splice(
@@ -114,38 +107,33 @@ function App() {
           );
 
           // return message to player
-          return (
-            "You have picked up the " +
-            this.name +
-            ". You currently have: " +
-            player.inventory.join(", ")
-          );
+          setDetails("You have picked up the " + this.name + ".");
         }
         // if item is not takable
         else {
-          return "You can't take the " + this.name + ".";
+          setDetails("You can't take the " + this.name + ".");
         }
       }
       // if the item is not in the same room returns that the item is not there
       else {
-        return this.name + " is not here.";
+        setDetails("The " + this.name + " is not here.");
       }
     }
 
-    drop() {
+    drop(player) {
       //removes item from player inventory
       player.inventory.splice(player.inventory.indexOf(this.name), 1); // index,how many item to be removed
-      console.log(`You have dropped the ${this.name}.`);
+      setDetails(`You have dropped the ${this.name}.`);
 
       // adds item to the current room
       player.currentRoom.itemsInRoom.push(this.name);
 
       // lets the player know what is left in their inventory
       if (player.inventory.length > 0) {
-        return (
+        setDetails(
           "You have " + player.inventory.join(", ") + " left in your inventory."
         );
-      } else return "You have nothing in your inventory.";
+      } else setDetails("You have nothing in your inventory.");
     }
   }
 
@@ -278,14 +266,10 @@ function App() {
       this.west = west;
     }
 
-    // //when entering a new room, the room description method is accessed which prints the room description
-    // enter() {
-    //   console.log("enter is triggered");
-    //   setDescription(this.roomDescription);
-    // }
-
     //function to move a character into a new room
-    move(answerItem) {
+    move(answerItem, player) {
+      console.log("BUG: inside move function player is", player);
+
       //declares a variable to hold the direction the user wants to move
       let direction = answerItem;
       //declares a variable that holds what the target room is based on the directional properties in the current room
@@ -300,7 +284,7 @@ function App() {
             player.inventory.includes("Invisibility Cloak")
           ) {
             newRoom.isUnlocked = true;
-            this.move(answerItem);
+            this.move(answerItem, player);
           } else {
             setDetails("This room is locked! What is the password?");
           }
@@ -312,7 +296,7 @@ function App() {
           setDetails("");
 
           //if the room is unlocked, enter the new room and change the player's current room property to the new room
-          setPlayer({ ...player, currentRoom: newRoom });
+          player.currentRoom = newRoom;
 
           //when entering a new room, the room description method is accessed which prints the room description
           setDescription(newRoom.roomDescription);
@@ -330,23 +314,6 @@ function App() {
     lookAround() {
       let currentItems = this.itemsInRoom;
       setDetails(`You look around and you see ${currentItems.join(", ")}`);
-      // for (let item of currentItems) console.log(item);
-    }
-
-    //drop from room
-    drop(answerItem, take) {
-      if (take) {
-        //if the item is takeable - find the item in the currentRoom.itemsInRoom array and remove it
-        console.log("answerItem is", answerItem);
-        // console.log("player.currentRoom is", player.currentRoom)
-        console.log("items in room are is", player.currentRoom.itemsInRoom);
-        console.log(player.currentRoom.itemsInRoom.indexOf(answerItem.name));
-        player.currentRoom.itemsInRoom.splice(
-          player.currentRoom.itemsInRoom.indexOf(answerItem.name),
-          1
-        );
-        console.log("items in room are is", player.currentRoom.itemsInRoom);
-      } else return;
     }
   }
   //declares each of the rooms
@@ -415,26 +382,25 @@ function App() {
   );
 
   //------------------------------State------------------------------//
-  // // player
-  // const [player, setPlayer] = useState({
-  //   name: "Player1",
-  //   inventory: [],
-  //   currentRoom: "",
-  //   house: "",
-  // });
+  // player
+  const [player, setPlayer] = useState({
+    name: "Player1",
+    inventory: [],
+    currentRoom: "",
+    house: "",
+  });
 
   // sets game description to be displayed
   const [
     description,
     setDescription,
   ] = useState(`Welcome to Hogwarts, School of Witchcraft and Wizardry! Today you are
-  tasked with a very important mission: find the remaining horcrux and
-  destroy it as you move north, south, east, and west around the castle and
-  interact with enchanted objects to defeat Voldemort once and for all! If
-  you wish to leave, simply ask to "exit"`);
+  tasked with a very important mission to find one remaining horcrux and
+  destroy it.`);
 
   // sets game details, which show below room description to player
-  const [details, setDetails] = useState("");
+  const [details, setDetails] = useState(`Move north, south, east, and west around the castle and
+  interact with enchanted objects to defeat Voldemort once and for all!`);
 
   // item key - given a string input maps to the corresponding item object
   const [itemKey, setItemKey] = useState({
@@ -522,8 +488,9 @@ function App() {
         player.inventory.includes(sword.name) ||
         player.inventory.includes(basiliskFang.name)
       ) {
-        setDescription(
-          "You are in the Chamber of Secrets. Tom Riddle's Diary does not stand a chance now that you have the proper tools to destroy it. As the last horcrux to destroy you have now completed your quest to vanquish Lord Voldemort once and for all.  You are indeed The Chose One.\nCongratulations. You Win!"
+        setDescription("Congratulations. You Win!");
+        setDetails(
+          "You are in the Chamber of Secrets. Tom Riddle's Diary does not stand a chance now that you have the proper tools to destroy it. As the last horcrux to destroy you have now completed your quest to vanquish Lord Voldemort once and for all.  You are indeed The Chose One."
         );
       }
     }
@@ -536,31 +503,33 @@ function App() {
     }
   }
 
+  // begins game when ENTER is clicked
   function startGame() {
     setDescription(greatHall.roomDescription);
+    setDetails("")
     setPlayer({ ...player, currentRoom: greatHall });
   }
 
+  // play function - triggered whenever a user input is submitted
   function playerMove(answerAction, answerItem) {
     //only if both answerAction and answerItem are defined will the the switch statement be triggered.  Otherwise the user input is not valid
     if (answerAction && answerItem) {
+      console.log("inside answer if statement", answerAction, answerItem);
       //switch statement looks at answerAction and triggers the appropriate case based on input
       switch (answerAction) {
         case "move": //WORKING IN REACT
-          //vet the direction against this array before entering move case
-          // let directionArray = ["north", "east", "south", "west"];
-          player.currentRoom.move(answerItem);
+          player.currentRoom.move(answerItem, player);
           break;
 
-        // //unlock is triggered to open the roomOfRequirement, we want to change the current room to whichever room belongs to the desired direction key, then use our move function to move into the room
-        // case "unlock":
-        //   currentRoom = player.currentRoom;
-        //   //since answer item is direction, currentRoom[answerItem] is identify what room you're moving too: in this case it's the roomOfRequirement
-        //   let newRoom = roomKey[currentRoom[answerItem]];
-        //   //keeps new room unlocked
-        //   newRoom.isUnlocked = true;
-        //   player.currentRoom.move(answerItem);
-        //   break;
+        //unlock is triggered to open the roomOfRequirement, we want to change the current room to whichever room belongs to the desired direction key, then use our move function to move into the room
+        case "unlock":
+          // currentRoom = player.currentRoom;
+          //since answer item is direction, currentRoom[answerItem] is identify what room you're moving too: in this case it's the roomOfRequirement
+          let newRoom = roomKey[player.currentRoom[answerItem]];
+          //keeps new room unlocked
+          newRoom.isUnlocked = true;
+          player.currentRoom.move(answerItem, player);
+          break;
 
         //if answerAction is look - trigger lookAround method
         case "look": //WORKING IN REACT
@@ -570,45 +539,33 @@ function App() {
         //if answerAction is drop - trigger drop method
         case "drop":
           //calls the drop method on the item class
-          console.log(itemKey[answerItem].drop());
-          //adds the dropped item to the current room's inventory
-          // player.currentRoom.itemsInRoom.push(itemKey[answerItem].name);
+          itemKey[answerItem].drop(player);
           break;
-
-        // //if answerAction is check - trigger checkInventory
-        // case "check":
-        //   checkPlayerInventory();
-        //   break;
 
         // if answerAction is examine - trigger examine method
         case "examine": //WORKING IN REACT
-          console.log(itemKey[answerItem].examine());
+          itemKey[answerItem].examine();
           break;
 
         // if answerAction is read - trigger read method
         case "read": //WORKING IN REACT
-          console.log(itemKey[answerItem].read());
+          itemKey[answerItem].read();
           break;
 
         // if answerAction is greet - trigger greet method
         case "greet": //WORKING IN REACT
-          console.log(itemKey[answerItem].greet());
+          itemKey[answerItem].greet();
           break;
 
         // if answerAction is puton - trigger puton method
         case "putOn": //WORKING IN REACT
-          itemKey[answerItem].putOn();
+          itemKey[answerItem].putOn(player);
           break;
 
         // if answerAction is take - trigger take method
-        case "take":
-          if (answerItem === "inventory") {
-            // checkPlayerInventory();
-          } else {
-            console.log("player", player)
-            // adds item to inventory if item is takeable and in the current room
-            console.log(itemKey[answerItem].take(player.currentRoom.itemsInRoom));
-          }
+        case "take": //WORKING IN REACT
+          // adds item to inventory if item is takeable and in the current room
+          itemKey[answerItem].take(player);
           break;
       }
       //check win and lose conditions
@@ -618,6 +575,8 @@ function App() {
     //if answerAction and answerItem are not both defined
     else setDetails(`Sorry, I don't know how to do that.`);
   }
+
+  console.log("player is", player);
 
   return (
     <div className="App">

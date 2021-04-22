@@ -1,6 +1,10 @@
 import { useState } from "react";
 
 function PlayerInput(props) {
+  //------------------------------State------------------------------//
+  const [answer, setAnswer] = useState("");
+  const [game, setGame] = useState(false);
+
   //------------------------------Actions------------------------------//
   //action key - given a string input maps to the corresponding action
   let listOfActions = {
@@ -25,18 +29,19 @@ function PlayerInput(props) {
     putOn: ["put on", "wear"],
   };
   //----------------------------------------Functions-------------------------------//
-  const [answer, setAnswer] = useState("");
-
   // handles changing input
   function handleChange(evt) {
-      setAnswer(evt.target.value)
-      console.log("answer set")
+    setAnswer(evt.target.value);
   }
-  
+
   //function to turn answer into array to isolate verb and noun
   function splitAnswer(evt) {
+    // prevents total page refresh
     evt.preventDefault();
-    console.log(answer);
+
+    // clears input of form and resets to placeholder text
+    setAnswer("");
+
     //declares answerArr variable as an array to hold the answer action and answer verb
     let answerArr = [];
     //creates an array of the available actions from listOfActions
@@ -60,21 +65,31 @@ function PlayerInput(props) {
       });
     });
 
-    props.playerMove(answerArr[0],answerArr[1])
-    // // sets next move in state
-    // props.setAnswerAction(answerArr[0]);
-    // console.log("answeraction set")
-    // props.setAnswerItem(answerArr[1]);
-    // console.log("answeritem set")
+    props.playerMove(answerArr[0], answerArr[1]);
+  }
+
+  function beginGame() {
+    props.startGame();
+    setGame(true);
   }
 
   return (
     <div id="player-input">
-      <button class="button" onClick={props.startGame}>Enter</button>
-      <form onSubmit={splitAnswer}>
+      <button
+        style={{ visibility: game ? "hidden" : "visible" }}
+        className="button"
+        onClick={beginGame}
+      >
+        Enter
+      </button>
+      <form
+        style={{ visibility: game ? "visible" : "hidden" }}
+        onSubmit={splitAnswer}
+      >
         <input
           type="text"
           placeholder="Enter Your Next Move"
+          value={answer}
           onChange={handleChange}
         />
       </form>
