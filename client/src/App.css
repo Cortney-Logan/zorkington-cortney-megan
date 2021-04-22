@@ -1,68 +1,105 @@
-@import url(https://allfont.net/allfont.css?fonts=lumos); 
+@import url(https://allfont.net/allfont.css?fonts=lumos);
 /* Carpe Saponem Fonts */
 
-@import url('http://fonts.cdnfonts.com/css/harry-p');
+@import url("http://fonts.cdnfonts.com/css/harry-p");
 
 /* -------------------- Global -------------------- */
 
-body{
-    margin: auto;
-    background-image: url("./components/images/the-great-hall.png");
-    background-size: auto 100vh;
-    font-family: 'Lumos', arial;
+body {
+  margin: auto;
+  background-image: url("./components/images/the-great-hall.png");
+  background-size: auto 100vh;
+  font-family: "Lumos", arial;
+  position: relative;
+}
+.App {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  z-index: 100;
+  padding: 0;
 }
 
 /* -------------------- Header -------------------- */
 
-#header{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 50px;
+#header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px;
 }
 
-h1{
-    font-family: 'Harry P', sans-serif;
-    font-size: 100px;
-    color: #E7A035;
-    margin: 0;
+h1 {
+  font-family: "Harry P", sans-serif;
+  font-size: 100px;
+  color: #e7a035;
+  margin: 0;
+  padding: 0;
 }
 
-h2{
-    font-family: 'Harry P', sans-serif;
-    font-size: 75px;
-    color: #E7A035;
-    margin: 0;
+h2 {
+  font-family: "Harry P", sans-serif;
+  font-size: 75px;
+  color: #e7a035;
+  margin: 0;
 }
 
 /* -------------------- PlayContainer -------------------- */
 
-#player-container{
-    display:flex;
+#player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#text-area {
+  padding: 5vw;
+  font-size: 20px;
+  width: 60vw;
+  color: #e7a035;
+  text-align: center;
+}
+
+#player-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align:center;
+}
+
+.button {
+  font-family: inherit;
+  font-size: 50px;
+  font-style: bold;
+  background-color: transparent;
+  border: transparent;
+  color: #e7a035;
+}
+
+.button:hover {
+  color: white;
+  cursor: pointer;
+}
+
+/* -------------------- Inventory -------------------- */
+#inventory-container{
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#text-area{
-    background-color: rgba(0,0,0,.75);
-    padding: 5vw;
-    font-size: 20px;
-    width: 40vw;
-    color: #E7A035;
-    text-align:center;
+#inventory-container h3{
+    color: #e7a035;
 }
 
-.button{
-font-family:inherit;
-font-size: 50px;
-font-style: bold;
-background-color:transparent;
-border: transparent;
-color: #E7A035;
+#inventory{
+    display: flex;
+    align-items: center; 
 }
 
-.button:hover{
-    color: white;
-    cursor: pointer;
+.inventory-item{
+    height: 100px;
 }
-

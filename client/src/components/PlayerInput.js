@@ -75,13 +75,7 @@ function PlayerInput(props) {
 
   return (
     <div id="player-input">
-      <button
-        style={{ visibility: game ? "hidden" : "visible" }}
-        className="button"
-        onClick={beginGame}
-      >
-        Enter
-      </button>
+      {" "}
       <form
         style={{ visibility: game ? "visible" : "hidden" }}
         onSubmit={splitAnswer}
@@ -93,6 +87,13 @@ function PlayerInput(props) {
           onChange={handleChange}
         />
       </form>
+      <button
+        style={{ visibility: game ? "hidden" : "visible" }}
+        className="button"
+        onClick={beginGame}
+      >
+        ~ Enter ~
+      </button>
     </div>
   );
 }
