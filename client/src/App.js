@@ -319,7 +319,7 @@ function App() {
   //declares each of the rooms
   let greatHall = new Room(
     true,
-    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see Professor McGonagall with the sorting hat.",
+    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see Professor McGonagall with the Sorting Hat.",
     [treacleTart.name, sortingHat.name],
     "gryffindorCommon",
     "darkArtsClass",
@@ -402,8 +402,7 @@ function App() {
   const [
     details,
     setDetails,
-  ] = useState(`Move north, south, east, and west around the castle and
-  interact with enchanted objects to defeat Voldemort once and for all!`);
+  ] = useState(`To play, click "Enter". Then enter commands to move about the castle like "move north" or "move south". Interact with objects with commands like "examine", "greet", "read" or "take", for example "greet hat". Move about the castle and interact with enchanted objects to defeat Voldemort once and for all!`);
 
   // item key - given a string input maps to the corresponding item object
   const [itemKey, setItemKey] = useState({
