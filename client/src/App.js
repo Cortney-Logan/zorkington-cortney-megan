@@ -319,7 +319,7 @@ function App() {
   //declares each of the rooms
   let greatHall = new Room(
     true,
-    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see Professor McGonagall with the sorting hat. If you look around you'll see many things! What would you like to do?",
+    "Welcome to the Great Hall! It is filled with students feasting on many treats, including your favorite- treacle tarts! In the distance you see Professor McGonagall with the sorting hat.",
     [treacleTart.name, sortingHat.name],
     "gryffindorCommon",
     "darkArtsClass",
@@ -332,7 +332,7 @@ function App() {
     `Here dwell the brave at heart,
   their daring, nerve, and chivalry,
   set Gryffindors apart!
-  The fire is roaring and the students are lounging. You overhear bits of conversations among the past heads of Gryffindor (all the way back to Godrick Gryffindor), as they appear and vanish in their portrait frames that line the walls. You see a glimmering fabric in the corner of the room. What is your move?`,
+  The fire is roaring and the students are lounging. You overhear bits of conversations among the past heads of Gryffindor (all the way back to Godrick Gryffindor), as they appear and vanish in their portrait frames that line the walls. You see a glimmering fabric in the corner of the room.`,
     [cloak.name, portrait.name],
     false,
     "library",
@@ -399,7 +399,10 @@ function App() {
   destroy it.`);
 
   // sets game details, which show below room description to player
-  const [details, setDetails] = useState(`Move north, south, east, and west around the castle and
+  const [
+    details,
+    setDetails,
+  ] = useState(`Move north, south, east, and west around the castle and
   interact with enchanted objects to defeat Voldemort once and for all!`);
 
   // item key - given a string input maps to the corresponding item object
@@ -506,7 +509,7 @@ function App() {
   // begins game when ENTER is clicked
   function startGame() {
     setDescription(greatHall.roomDescription);
-    setDetails("")
+    setDetails("");
     setPlayer({ ...player, currentRoom: greatHall });
   }
 

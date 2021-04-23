@@ -23,7 +23,7 @@ function PlayContainer(props) {
         startGame={props.startGame}
         playerMove={props.playerMove}
       />
-      <Inventory/>
+      <Inventory inventory={props.player.inventory}/>
     </div>
   );
 }

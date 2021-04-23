@@ -3,20 +3,22 @@
 
 @import url("http://fonts.cdnfonts.com/css/harry-p");
 
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap');
+
 /* -------------------- Global -------------------- */
 
 body {
   margin: auto;
   background-image: url("./components/images/the-great-hall.png");
-  background-size: auto 100vh;
-  font-family: "Lumos", arial;
+  background-size: auto 125vh;
+  font-family: 'EB Garamond', serif;
   position: relative;
 }
 .App {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: auto;
   margin: 0;
   z-index: 100;
   padding: 0;
@@ -28,22 +30,26 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 50px;
+  justify-content: center;
+  margin: 30px;
 }
 
 h1 {
   font-family: "Harry P", sans-serif;
-  font-size: 100px;
+  font-size: 5.5rem;
   color: #e7a035;
   margin: 0;
   padding: 0;
+  text-align: center;
 }
 
 h2 {
   font-family: "Harry P", sans-serif;
-  font-size: 75px;
+  font-size: 4rem;
   color: #e7a035;
   margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 /* -------------------- PlayContainer -------------------- */
@@ -55,11 +61,13 @@ h2 {
 }
 
 #text-area {
-  padding: 5vw;
+  padding: 2.5vw;
   font-size: 20px;
-  width: 60vw;
+  width: 80vw;
+  height: 350px;
   color: #e7a035;
   text-align: center;
+  /* font-family: "Lumos", arial; */
 }
 
 #player-input {
@@ -84,22 +92,39 @@ h2 {
   cursor: pointer;
 }
 
+#description{
+font-size: 2rem;
+
+}
+
+#details{
+  font-size: 1.5rem;
+}
+
 /* -------------------- Inventory -------------------- */
 #inventory-container{
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 80vw;
+    height: 175px;
+   background-color:rgba(116, 116, 116, 0.5);;
 }
 
 #inventory-container h3{
     color: #e7a035;
+    font-size: 2rem;
+    padding: 0;
+    margin: 0;
 }
 
 #inventory{
     display: flex;
-    align-items: center; 
+    align-items: center;
+    color: white;
 }
 
 .inventory-item{
     height: 100px;
+    padding: 1vw;
 }
