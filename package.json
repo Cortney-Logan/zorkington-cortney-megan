@@ -4,7 +4,7 @@
   "description": "Instructions: http://bootcamp.burlingtoncodeacademy.com/projects/zorkington",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,8 @@
   "dependencies": {
     "create-react-app": "^4.0.3",
     "express": "^4.17.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "word-wrap": "^1.2.3"
   }
 }
